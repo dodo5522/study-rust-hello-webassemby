@@ -39,3 +39,45 @@ pub fn draw_triangle(context: &web_sys::CanvasRenderingContext2d, points: &[Poin
     context.fill();
   }
 }
+
+fn get_center(first: &Point, second: &Point) -> Point {
+  Point::new((first.x + second.x) / 2.0, (first.y + second.y) / 2.0)
+}
+
+pub fn draw_sierpinski(
+  context: &web_sys::CanvasRenderingContext2d,
+  points: &[Point; 3],
+  depth: u8,
+  fill: bool,
+) {
+  draw_triangle(context, &points, fill);
+
+  let depth = depth - 1;
+
+  if depth > 0 {
+    let top = &points[0];
+    let bottom_left = &points[1];
+    let bottom_right = &points[2];
+
+    let points = [
+      Point::new(top.x, top.y),
+      get_center(&top, &bottom_left),
+      get_center(&top, &bottom_right),
+    ];
+    draw_sierpinski(context, &points, depth, fill);
+
+    let points = [
+      get_center(&top, &bottom_left),
+      Point::new(bottom_left.x, bottom_left.y),
+      get_center(&bottom_right, &bottom_left),
+    ];
+    draw_sierpinski(context, &points, depth, fill);
+
+    let points = [
+      get_center(&top, &bottom_right),
+      get_center(&bottom_right, &bottom_left),
+      Point::new(bottom_right.x, bottom_right.y),
+    ];
+    draw_sierpinski(context, &points, depth, fill);
+  }
+}

@@ -9,10 +9,10 @@ pub fn main() {
 
   if let Some(canvas) = get_canvas_2d("canvas") {
     let points = [
-      Point::new(200.0, 0.0),
-      Point::new(0.0, 400.0),
-      Point::new(400.0, 400.0),
+      Point::new(250.0, 0.0),
+      Point::new(0.0, 500.0),
+      Point::new(500.0, 500.0),
     ];
-    draw_triangle(&canvas, &points, false);
+    draw_sierpinski(&canvas, &points, 3, false);
   }
 }
