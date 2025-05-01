@@ -3,7 +3,6 @@ pub mod point;
 
 use self::color::*;
 use self::point::*;
-use rand::{thread_rng, Rng};
 use web_sys::wasm_bindgen::JsCast;
 
 pub fn get_canvas_2d(element_id: &str) -> Option<web_sys::CanvasRenderingContext2d> {
@@ -57,12 +56,7 @@ pub fn draw_sierpinski(
     let top = &points[0];
     let bottom_left = &points[1];
     let bottom_right = &points[2];
-
-    let mut random = thread_rng();
-    let next_color = Color::new(
-      random.gen_range(0, 255) as u8,
-      random.gen_range(0, 255) as u8,
-      random.gen_range(0, 255) as u8);
+    let next_color = Color::random();
 
     let points = [
       Point::new(top.x, top.y),

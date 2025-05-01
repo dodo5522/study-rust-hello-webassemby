@@ -14,7 +14,7 @@ pub fn main() {
       Point::new(0.0, 500.0),
       Point::new(500.0, 500.0),
     ];
-    let color = Color::new(255, 0, 0);
+    let color = Color::random();
     draw_sierpinski(&canvas, &points, &color, 6, true);
   }
 }
