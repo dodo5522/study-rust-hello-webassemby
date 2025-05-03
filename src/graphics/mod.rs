@@ -14,7 +14,12 @@ pub fn get_canvas_2d(element_id: &str) -> Option<web_sys::CanvasRenderingContext
   context.dyn_into::<web_sys::CanvasRenderingContext2d>().ok()
 }
 
-pub fn draw_triangle(context: &web_sys::CanvasRenderingContext2d, points: &[Point; 3], color: &Color, fill: bool) {
+pub fn draw_triangle(
+  context: &web_sys::CanvasRenderingContext2d,
+  points: &[Point; 3],
+  color: &Color,
+  fill: bool,
+) {
   let top = &points[0];
   let bottom_left = &points[1];
   let bottom_right = &points[2];
