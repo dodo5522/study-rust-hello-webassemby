@@ -1,8 +1,9 @@
 mod graphics;
 
+use graphics::canvas::get_canvas_2d;
 use graphics::color::Color;
 use graphics::point::Point;
-use graphics::{draw_sierpinski, get_canvas_2d};
+use graphics::triangle::draw_sierpinski;
 
 pub fn main() {
   wasm_logger::init(wasm_logger::Config::default());
