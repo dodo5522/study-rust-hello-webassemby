@@ -45,7 +45,7 @@ pub fn main() {
         img.set_onload(Some(callback.as_ref().unchecked_ref()));
         img.set_onerror(Some(error_callback.as_ref().unchecked_ref()));
 
-        img.set_src("static/images/Idle.png");
+        img.set_src("static/images/rhb.png");
         success_rx.await.ok();
 
         if let Err(e) = canvas.draw_image_with_html_image_element(&img, 1.0, 1.0) {
