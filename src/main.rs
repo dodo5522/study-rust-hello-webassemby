@@ -2,9 +2,6 @@ mod graphics;
 mod reader;
 
 use graphics::canvas::get_canvas_2d;
-use graphics::color::Color;
-use graphics::point::Point;
-use graphics::triangle::draw_sierpinski;
 use reader::json;
 use serde_wasm_bindgen::from_value;
 use std::rc::Rc;
@@ -17,13 +14,6 @@ pub fn main() {
   log::debug!("Hello, world!");
 
   if let Some(canvas) = get_canvas_2d("canvas") {
-    let points = [
-      Point::new(250.0, 0.0),
-      Point::new(0.0, 500.0),
-      Point::new(500.0, 500.0),
-    ];
-    let color = Color::random();
-
     wasm_bindgen_futures::spawn_local(async move {
       let (success_tx, success_rx) = futures::channel::oneshot::channel::<Result<(), JsValue>>();
       let success_tx = Rc::new(Mutex::new(Some(success_tx)));
@@ -51,22 +41,22 @@ pub fn main() {
         img.set_src("static/images/rhb.png");
         success_rx.await.ok();
 
-        draw_sierpinski(&canvas, &points, &color, 6, true);
-
         if let Ok(json) = json::fetch_json("static/coordinates/rhb.json").await {
           if let Ok(sheet) = from_value::<reader::json::Sheet>(json) {
             if let Some(cell) = sheet.frames.get("Dead (1).png") {
-              canvas.draw_image_with_html_image_element_and_sw_and_sh_and_dx_and_dy_and_dw_and_dh(
-                &img,
-                cell.frame.x.into(),
-                cell.frame.y.into(),
-                cell.frame.w.into(),
-                cell.frame.h.into(),
-                300.0,
-                300.0,
-                cell.frame.w.into(),
-                cell.frame.h.into(),
-              ).expect("cannot draw image");
+              canvas
+                .draw_image_with_html_image_element_and_sw_and_sh_and_dx_and_dy_and_dw_and_dh(
+                  &img,
+                  cell.frame.x.into(),
+                  cell.frame.y.into(),
+                  cell.frame.w.into(),
+                  cell.frame.h.into(),
+                  300.0,
+                  300.0,
+                  cell.frame.w.into(),
+                  cell.frame.h.into(),
+                )
+                .expect("cannot draw image");
             }
           }
         }
