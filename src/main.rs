@@ -2,7 +2,7 @@ mod browser;
 mod graphics;
 mod reader;
 
-use crate::browser::context::canvas_2d;
+use crate::browser::context::context;
 use reader::json;
 use serde_wasm_bindgen::from_value;
 use std::rc::Rc;
@@ -16,7 +16,7 @@ pub fn main() -> Result<(), JsValue> {
   let window = browser::context::window().expect("Cannot get window object");
   let document = browser::context::document().expect("Cannot get document object");
 
-  if let Some(canvas) = canvas_2d("canvas") {
+  if let Ok(canvas) = context("canvas", "2d") {
     wasm_bindgen_futures::spawn_local(async move {
       let (success_tx, success_rx) = futures::channel::oneshot::channel::<Result<(), JsValue>>();
       let success_tx = Rc::new(Mutex::new(Some(success_tx)));
