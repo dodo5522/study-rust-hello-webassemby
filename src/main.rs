@@ -35,9 +35,6 @@ pub(crate) struct Sheet {
 pub fn main() -> Result<(), JsValue> {
   wasm_logger::init(wasm_logger::Config::default());
 
-  let window = browser::context::window().expect("Cannot get window object");
-  let document = browser::context::document().expect("Cannot get document object");
-
   if let Ok(canvas) = context("canvas", "2d") {
     spawn_local(async move {
       let (success_tx, success_rx) = futures::channel::oneshot::channel::<Result<(), JsValue>>();
@@ -92,6 +89,7 @@ pub fn main() -> Result<(), JsValue> {
         }
       }) as Box<dyn FnMut()>);
 
+      let window = browser::context::window().expect("Cannot get window object");
       let _ = window.set_interval_with_callback_and_timeout_and_arguments_0(
         interval_callback.as_ref().unchecked_ref(),
         50,
