@@ -3,7 +3,7 @@ mod graphics;
 
 use crate::browser::accessor;
 use crate::browser::context::context;
-use crate::browser::future::spawn_local;
+use crate::browser::wrapper::spawn_local;
 use serde::Deserialize;
 use serde_wasm_bindgen::from_value;
 use std::collections::HashMap;
@@ -61,7 +61,7 @@ pub fn main() -> Result<(), JsValue> {
         .expect("rhn.json not found");
       let sheet = from_value::<Sheet>(value).expect("sheet not found on json");
 
-      let image_element = web_sys::HtmlImageElement::new().expect("Image element creation failed");
+      let image_element = accessor::new_image().expect("Image element creation failed");
       image_element.set_onload(Some(callback_image_on_load.as_ref().unchecked_ref()));
       image_element.set_onerror(Some(callback_image_on_error.as_ref().unchecked_ref()));
       image_element.set_src("static/images/rhb.png");
