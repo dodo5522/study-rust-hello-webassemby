@@ -1,20 +1,42 @@
+mod browser;
 mod graphics;
-mod reader;
 
-use graphics::canvas::get_canvas_2d;
-use reader::json;
+use crate::browser::accessor;
+use crate::browser::context::context;
+use crate::browser::future::spawn_local;
+use serde::Deserialize;
 use serde_wasm_bindgen::from_value;
+use std::collections::HashMap;
 use std::rc::Rc;
 use std::sync::Mutex;
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::{JsCast, JsValue};
 
-pub fn main() {
-  wasm_logger::init(wasm_logger::Config::default());
-  log::debug!("Hello, world!");
+#[derive(Deserialize)]
+pub(crate) struct Rect {
+  pub(crate) x: u32,
+  pub(crate) y: u32,
+  pub(crate) w: u32,
+  pub(crate) h: u32,
+}
 
-  if let Some(canvas) = get_canvas_2d("canvas") {
-    wasm_bindgen_futures::spawn_local(async move {
+#[derive(Deserialize)]
+pub(crate) struct Cell {
+  pub(crate) frame: Rect,
+  pub(crate) rotated: bool,
+  pub(crate) trimmed: bool,
+}
+
+#[derive(Deserialize)]
+pub(crate) struct Sheet {
+  pub(crate) frames: HashMap<String, Cell>,
+}
+
+pub fn main() -> Result<(), JsValue> {
+  wasm_logger::init(wasm_logger::Config::default());
+
+  if let Ok(canvas) = context("canvas", "2d") {
+    spawn_local(async move {
       let (success_tx, success_rx) = futures::channel::oneshot::channel::<Result<(), JsValue>>();
       let success_tx = Rc::new(Mutex::new(Some(success_tx)));
       let error_tx = Rc::clone(&success_tx);
@@ -34,10 +56,10 @@ pub fn main() {
         }
       });
 
-      let json = json::fetch_json("static/coordinates/rhb.json")
+      let value = accessor::fetch_json("static/coordinates/rhb.json")
         .await
         .expect("rhn.json not found");
-      let sheet = from_value::<reader::json::Sheet>(json).expect("sheet not found on json");
+      let sheet = from_value::<Sheet>(value).expect("sheet not found on json");
 
       let image_element = web_sys::HtmlImageElement::new().expect("Image element creation failed");
       image_element.set_onload(Some(callback_image_on_load.as_ref().unchecked_ref()));
@@ -67,15 +89,16 @@ pub fn main() {
         }
       }) as Box<dyn FnMut()>);
 
-      if let Some(window) = web_sys::window() {
-        let _ = window.set_interval_with_callback_and_timeout_and_arguments_0(
-          interval_callback.as_ref().unchecked_ref(),
-          50,
-        );
-      }
+      let window = browser::context::window().expect("Cannot get window object");
+      let _ = window.set_interval_with_callback_and_timeout_and_arguments_0(
+        interval_callback.as_ref().unchecked_ref(),
+        50,
+      );
 
       interval_callback.forget();
       success_rx.await.ok();
     });
   }
+
+  Ok(())
 }
