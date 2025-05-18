@@ -14,22 +14,22 @@ use wasm_bindgen::{JsCast, JsValue};
 
 #[derive(Deserialize)]
 pub(crate) struct Rect {
-  pub(crate) x: u32,
-  pub(crate) y: u32,
-  pub(crate) w: u32,
-  pub(crate) h: u32,
+  pub x: u32,
+  pub y: u32,
+  pub w: u32,
+  pub h: u32,
 }
 
 #[derive(Deserialize)]
 pub(crate) struct Cell {
-  pub(crate) frame: Rect,
-  pub(crate) rotated: bool,
-  pub(crate) trimmed: bool,
+  pub frame: Rect,
+  pub rotated: bool,
+  pub trimmed: bool,
 }
 
 #[derive(Deserialize)]
 pub(crate) struct Sheet {
-  pub(crate) frames: HashMap<String, Cell>,
+  pub frames: HashMap<String, Cell>,
 }
 
 pub fn main() -> Result<(), JsValue> {
