@@ -31,3 +31,12 @@ pub(crate) fn request_animation_frame(callback: &LoopClosure) -> Result<i32, Err
     .request_animation_frame(callback.as_ref().unchecked_ref())
     .map_err(|v| anyhow!("request_animation_frame() failed"))
 }
+
+pub(crate) fn now() -> Result<f64, Error> {
+  Ok(
+    window()?
+      .performance()
+      .ok_or(anyhow!("performance() not defined"))?
+      .now(),
+  )
+}
