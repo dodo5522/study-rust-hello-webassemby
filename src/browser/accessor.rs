@@ -1,10 +1,10 @@
 use crate::browser::context::window;
-use anyhow::anyhow;
+use anyhow::{Error, anyhow};
 use wasm_bindgen::{JsCast, JsValue};
 use wasm_bindgen_futures::JsFuture;
-use web_sys;
+use web_sys::{HtmlImageElement, Response};
 
-pub(crate) async fn fetch_with_str(resource: &str) -> Result<web_sys::Response, anyhow::Error> {
+pub(crate) async fn fetch_with_str(resource: &str) -> Result<Response, Error> {
   JsFuture::from(window()?.fetch_with_str(resource))
     .await
     .map_err(|v| anyhow!("fetch('{}') failed", resource))?
@@ -12,9 +12,13 @@ pub(crate) async fn fetch_with_str(resource: &str) -> Result<web_sys::Response, 
     .map_err(|v| anyhow!("Invalid fetch('{}') response", resource))
 }
 
-pub(crate) async fn fetch_json(path: &str) -> Result<JsValue, anyhow::Error> {
+pub(crate) async fn fetch_json(path: &str) -> Result<JsValue, Error> {
   let res = fetch_with_str(path).await?;
   JsFuture::from(res.json().map_err(|v| anyhow!("json() await error"))?)
     .await
     .map_err(|v| anyhow!("No json data"))
+}
+
+pub(crate) fn new_image() -> Result<HtmlImageElement, Error> {
+  HtmlImageElement::new().map_err(|v| anyhow!("Could not create HtmlImageElement: {:#?}", v))
 }
