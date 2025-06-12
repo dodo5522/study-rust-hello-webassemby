@@ -20,8 +20,17 @@
     cargo install -f --locked trunk --version 0.21.13
     ```
 
+# How to run
+
 4. Run it.
 
    ```bash
    trunk serve
    ```
+
+# How to release
+
+```bash
+trunk build --release --public-url /rhb
+aws s3 cp --recursive dist/ s3://${MY_BUCKET}/rhb/
+```
