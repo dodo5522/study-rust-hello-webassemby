@@ -5,7 +5,7 @@ mod graphics;
 use crate::browser::accessor;
 use crate::browser::context::context;
 use crate::browser::wrapper::spawn_local;
-use crate::engine::engine::load_image;
+use crate::engine::loader::load_image;
 use serde::Deserialize;
 use serde_wasm_bindgen::from_value;
 use std::collections::HashMap;
