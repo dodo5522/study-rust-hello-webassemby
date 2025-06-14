@@ -17,7 +17,8 @@ pub(crate) struct GameLoop {
 type SharedLoopClosure = Rc<RefCell<Option<LoopClosure>>>;
 
 impl GameLoop {
-  pub(crate) async fn start(mut game: impl Game + 'static) -> Result<(), Error> {
+  pub(crate) async fn start(game: impl Game + 'static) -> Result<(), Error> {
+    let mut game = game.initialize().await?;
     let mut game_loop = GameLoop {
       last_frame: now()?,
       accumulated_delta: 0.0,
