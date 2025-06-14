@@ -2,11 +2,11 @@ use anyhow::{Error, anyhow};
 use async_trait::async_trait;
 use std::cell::RefCell;
 use std::rc::Rc;
-use web_sys::CanvasRenderingContext2d;
 
 use crate::browser::accessor::{LoopClosure, now, request_animation_frame};
 use crate::browser::context::context;
 use crate::browser::wrapper::create_raf_closure;
+use crate::engine::renderer::Renderer;
 
 type SharedLoopClosure = Rc<RefCell<Option<LoopClosure>>>;
 
@@ -16,7 +16,7 @@ const FRAME_GAP_MS: f32 = 1.0 / 60.0 * 1000.0;
 pub(crate) trait Game {
   async fn initialize(&self) -> Result<Box<dyn Game>, Error>;
   fn update(&mut self);
-  fn draw(&self, context: &CanvasRenderingContext2d);
+  fn draw(&self, renderer: &Renderer);
 }
 
 pub(crate) struct GameLoop {
@@ -31,9 +31,10 @@ impl GameLoop {
       last_frame: now()?,
       accumulated_delta: 0.0,
     };
-
+    let renderer = Renderer::new(context("canvas", "2d")?);
     let f: SharedLoopClosure = Rc::new(RefCell::new(None));
     let g = f.clone();
+
     *g.borrow_mut() = Some(create_raf_closure(move |perf: f64| {
       game_loop.accumulated_delta += (perf - game_loop.last_frame) as f32;
       while game_loop.accumulated_delta > FRAME_GAP_MS {
@@ -41,7 +42,7 @@ impl GameLoop {
         game_loop.accumulated_delta -= FRAME_GAP_MS;
       }
       game_loop.last_frame = perf;
-      game.draw(&context("canvas", "2d").expect("Context should exist"));
+      game.draw(&renderer);
       let _ = request_animation_frame(f.borrow().as_ref().unwrap());
     }));
 

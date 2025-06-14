@@ -1,3 +1,3 @@
 pub(crate) mod game;
 pub(crate) mod loader;
-mod renderer;
+pub(crate) mod renderer;

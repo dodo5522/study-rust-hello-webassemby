@@ -1,12 +1,17 @@
-use crate::graphics::rect::Rect;
 use anyhow::{Error, anyhow};
 use web_sys::{CanvasRenderingContext2d, HtmlImageElement};
+
+use crate::graphics::rect::Rect;
 
 pub(crate) struct Renderer {
   context: CanvasRenderingContext2d,
 }
 
 impl Renderer {
+  pub(crate) fn new(context: CanvasRenderingContext2d) -> Self {
+    Self { context }
+  }
+
   pub(crate) fn clear(&self, rect: Rect) {
     self.context.clear_rect(
       rect.x.into(),
