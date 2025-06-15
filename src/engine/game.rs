@@ -12,7 +12,7 @@ type SharedLoopClosure = Rc<RefCell<Option<LoopClosure>>>;
 
 const FRAME_GAP_MS: f32 = 1.0 / 60.0 * 1000.0;
 
-#[async_trait]
+#[async_trait(?Send)]
 pub(crate) trait Game {
   async fn initialize(&self) -> Result<Box<dyn Game>, Error>;
   fn update(&mut self);

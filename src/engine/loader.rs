@@ -1,4 +1,4 @@
-use crate::{Sheet, browser};
+use crate::browser;
 
 use anyhow::{Error, anyhow};
 use serde_wasm_bindgen::from_value;
