@@ -1,4 +1,4 @@
-use crate::browser::accessor::LoopClosure;
+use crate::game::engine::browser::accessor::LoopClosure;
 use wasm_bindgen::closure::{Closure, WasmClosureFnOnce};
 
 pub(crate) fn spawn_local<F>(future: F)

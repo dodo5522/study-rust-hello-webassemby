@@ -1,28 +1,15 @@
+use crate::game::engine::browser::accessor::{LoopClosure, now, request_animation_frame};
+use crate::game::engine::browser::context::context;
+use crate::game::engine::browser::wrapper::create_raf_closure;
+use crate::game::engine::renderer::Renderer;
+use crate::game::engine::{Game, GameLoop};
 use anyhow::{Error, anyhow};
-use async_trait::async_trait;
 use std::cell::RefCell;
 use std::rc::Rc;
-
-use crate::browser::accessor::{LoopClosure, now, request_animation_frame};
-use crate::browser::context::context;
-use crate::browser::wrapper::create_raf_closure;
-use crate::engine::renderer::Renderer;
 
 type SharedLoopClosure = Rc<RefCell<Option<LoopClosure>>>;
 
 const FRAME_GAP_MS: f32 = 1.0 / 60.0 * 1000.0;
-
-#[async_trait(?Send)]
-pub(crate) trait Game {
-  async fn initialize(&self) -> Result<Box<dyn Game>, Error>;
-  fn update(&mut self);
-  fn draw(&self, renderer: &Renderer);
-}
-
-pub(crate) struct GameLoop {
-  last_frame: f64,        // 直前のフレームが リクエストされた時刻
-  accumulated_delta: f32, // 最後に描画してから累積した差分時間
-}
 
 impl GameLoop {
   pub(crate) async fn start(game: impl Game + 'static) -> Result<(), Error> {

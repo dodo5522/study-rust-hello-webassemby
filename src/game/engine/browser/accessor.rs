@@ -1,4 +1,4 @@
-use crate::browser::context::window;
+use crate::game::engine::browser::context::window;
 use anyhow::{Error, anyhow};
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::{JsCast, JsValue};
