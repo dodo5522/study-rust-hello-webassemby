@@ -3,10 +3,10 @@ use async_trait::async_trait;
 use serde_wasm_bindgen::from_value;
 
 use crate::game::WalkTheDog;
-use crate::game::engine::Game;
 use crate::game::engine::browser::accessor::fetch_json;
 use crate::game::engine::loader::load_image;
 use crate::game::engine::renderer::{Rect, Renderer};
+use crate::game::engine::{Game, KeyState, Point};
 use crate::game::sheet::Sheet;
 
 impl WalkTheDog {
@@ -15,6 +15,7 @@ impl WalkTheDog {
       image: None,
       sheet: None,
       frame: 0,
+      position: Point { x: 0, y: 0 },
     }
   }
 }
@@ -29,16 +30,35 @@ impl Game for WalkTheDog {
     Ok(Box::new(WalkTheDog {
       image: Some(image),
       sheet: Some(sheet),
-      frame: 0,
+      frame: self.frame,
+      position: self.position,
     }))
   }
 
-  fn update(&mut self) {
+  fn update(&mut self, key_state: &KeyState) {
+    let mut velocity = Point { x: 0, y: 0 };
+
     if self.frame < 23 {
       self.frame += 1;
     } else {
       self.frame = 0;
     }
+
+    if key_state.is_pressed("ArrowUp") {
+      velocity.y -= 3;
+    }
+    if key_state.is_pressed("ArrowDown") {
+      velocity.y += 3;
+    }
+    if key_state.is_pressed("ArrowRight") {
+      velocity.x += 3;
+    }
+    if key_state.is_pressed("ArrowLeft") {
+      velocity.x -= 3;
+    }
+
+    self.position.x += velocity.x;
+    self.position.y += velocity.y;
   }
 
   fn draw(&self, renderer: &Renderer) {
@@ -67,8 +87,8 @@ impl Game for WalkTheDog {
             height: cell.frame.h as f32,
           },
           &Rect {
-            x: 250.0,
-            y: 250.0,
+            x: self.position.x.into(),
+            y: self.position.y.into(),
             width: cell.frame.w as f32,
             height: cell.frame.h as f32,
           },

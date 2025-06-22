@@ -1,5 +1,5 @@
 use crate::game::engine::browser::accessor::{LoopClosure, now, request_animation_frame};
-use crate::game::engine::browser::context::context;
+use crate::game::engine::browser::context::canvas;
 use crate::game::engine::browser::wrapper::create_raf_closure;
 use crate::game::engine::renderer::Renderer;
 use crate::game::engine::{Game, GameLoop, browser};

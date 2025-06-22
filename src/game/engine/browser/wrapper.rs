@@ -1,5 +1,5 @@
 use crate::game::engine::browser::accessor::LoopClosure;
-use wasm_bindgen::closure::{Closure, WasmClosureFnOnce};
+use wasm_bindgen::closure::{Closure, WasmClosure, WasmClosureFnOnce};
 
 pub(crate) fn spawn_local<F>(future: F)
 where
@@ -17,4 +17,8 @@ where
 
 pub fn create_raf_closure(f: impl FnMut(f64) + 'static) -> LoopClosure {
   Closure::new(f)
+}
+
+pub fn closure_wrap<T: WasmClosure + ?Sized>(data: Box<T>) -> Closure<T> {
+  Closure::wrap(data)
 }
