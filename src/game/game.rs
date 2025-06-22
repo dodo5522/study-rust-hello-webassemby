@@ -3,10 +3,10 @@ use async_trait::async_trait;
 use serde_wasm_bindgen::from_value;
 
 use crate::game::WalkTheDog;
-use crate::game::engine::Game;
 use crate::game::engine::browser::accessor::fetch_json;
 use crate::game::engine::loader::load_image;
 use crate::game::engine::renderer::{Rect, Renderer};
+use crate::game::engine::{Game, KeyState};
 use crate::game::sheet::Sheet;
 
 impl WalkTheDog {
@@ -33,7 +33,7 @@ impl Game for WalkTheDog {
     }))
   }
 
-  fn update(&mut self) {
+  fn update(&mut self, key_state: &KeyState) {
     if self.frame < 23 {
       self.frame += 1;
     } else {

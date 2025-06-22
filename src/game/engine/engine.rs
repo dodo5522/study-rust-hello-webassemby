@@ -2,7 +2,7 @@ use crate::game::engine::browser::accessor::{LoopClosure, now, request_animation
 use crate::game::engine::browser::context::{canvas, window};
 use crate::game::engine::browser::wrapper::{closure_wrap, create_raf_closure};
 use crate::game::engine::renderer::Renderer;
-use crate::game::engine::{Game, GameLoop};
+use crate::game::engine::{Game, GameLoop, KeyPress, KeyState};
 use anyhow::{Error, anyhow};
 use futures::channel::mpsc::{UnboundedReceiver, unbounded};
 use std::cell::RefCell;
@@ -17,6 +17,7 @@ const FRAME_GAP_MS: f32 = 1.0 / 60.0 * 1000.0;
 
 impl GameLoop {
   pub(crate) async fn start(game: impl Game + 'static) -> Result<(), Error> {
+    let mut key_receiver = prepare_input()?;
     let mut game = game.initialize().await?;
     let mut game_loop = GameLoop {
       last_frame: now()?,
@@ -25,11 +26,13 @@ impl GameLoop {
     let renderer = Renderer::new(canvas("canvas", "2d")?);
     let f: SharedLoopClosure = Rc::new(RefCell::new(None));
     let g = f.clone();
+    let mut state = KeyState::new();
 
     *g.borrow_mut() = Some(create_raf_closure(move |perf: f64| {
+      process_input(&mut state, &mut key_receiver);
       game_loop.accumulated_delta += (perf - game_loop.last_frame) as f32;
       while game_loop.accumulated_delta > FRAME_GAP_MS {
-        game.update();
+        game.update(&state);
         game_loop.accumulated_delta -= FRAME_GAP_MS;
       }
       game_loop.last_frame = perf;
@@ -44,11 +47,6 @@ impl GameLoop {
     )?;
     Ok(())
   }
-}
-
-enum KeyPress {
-  KeyDown(KeyboardEvent),
-  KeyUp(KeyboardEvent),
 }
 
 fn prepare_input() -> Result<UnboundedReceiver<KeyPress>, Error> {
@@ -75,10 +73,6 @@ fn prepare_input() -> Result<UnboundedReceiver<KeyPress>, Error> {
   on_key_down.forget();
   on_key_up.forget();
   Ok(key_receiver)
-}
-
-struct KeyState {
-  pressed_keys: HashMap<String, KeyboardEvent>,
 }
 
 fn process_input(state: &mut KeyState, key_receiver: &mut UnboundedReceiver<KeyPress>) {
