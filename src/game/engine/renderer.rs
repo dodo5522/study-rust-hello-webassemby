@@ -4,11 +4,11 @@ use web_sys::{CanvasRenderingContext2d, HtmlImageElement};
 use crate::game::engine::{Rect, Renderer};
 
 impl Renderer {
-  pub(crate) fn new(context: CanvasRenderingContext2d) -> Self {
+  pub fn new(context: CanvasRenderingContext2d) -> Self {
     Self { context }
   }
 
-  pub(crate) fn clear(&self, rect: Rect) {
+  pub fn clear(&self, rect: Rect) {
     self.context.clear_rect(
       rect.x.into(),
       rect.y.into(),
@@ -17,7 +17,7 @@ impl Renderer {
     );
   }
 
-  pub(crate) fn draw_image(
+  pub fn draw_image(
     &self,
     image: &HtmlImageElement,
     frame: &Rect,
