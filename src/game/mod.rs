@@ -1,15 +1,15 @@
-pub(crate) mod engine;
+mod engine;
+pub type GameLoop = engine::EngineLoop;
+pub use engine::spawn_local;
 
-mod game;
 mod sheet;
+mod walk_the_dog;
 
-use crate::game::engine::{Game, Point};
-use crate::game::sheet::Sheet;
 use web_sys::HtmlImageElement;
 
 pub struct WalkTheDog {
   image: Option<HtmlImageElement>,
-  sheet: Option<Sheet>,
+  sheet: Option<sheet::Sheet>,
   frame: i32,
-  position: Point,
+  position: engine::Point,
 }

@@ -1,19 +1,14 @@
-use crate::game::engine::browser::accessor::{LoopClosure, now, request_animation_frame};
-use crate::game::engine::browser::context::canvas;
-use crate::game::engine::browser::wrapper::create_raf_closure;
-use crate::game::engine::renderer::Renderer;
-use crate::game::engine::{Game, GameLoop, browser};
 use anyhow::{Error, anyhow};
-use serde_wasm_bindgen::from_value;
-use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::Mutex;
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::{JsCast, JsValue};
 use web_sys::HtmlImageElement;
 
+use crate::game::engine::browser;
+
 pub async fn load_image(source: &str) -> Result<HtmlImageElement, Error> {
-  let image = browser::accessor::new_image()?;
+  let image = browser::new_image()?;
 
   let (success_tx, success_rx) = futures::channel::oneshot::channel::<Result<(), Error>>();
   let success_tx = Rc::new(Mutex::new(Some(success_tx)));

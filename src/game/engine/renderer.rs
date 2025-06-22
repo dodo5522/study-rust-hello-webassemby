@@ -1,16 +1,7 @@
 use anyhow::{Error, anyhow};
 use web_sys::{CanvasRenderingContext2d, HtmlImageElement};
 
-pub(crate) struct Rect {
-  pub x: f32,
-  pub y: f32,
-  pub width: f32,
-  pub height: f32,
-}
-
-pub(crate) struct Renderer {
-  context: CanvasRenderingContext2d,
-}
+use crate::game::engine::{Rect, Renderer};
 
 impl Renderer {
   pub(crate) fn new(context: CanvasRenderingContext2d) -> Self {
