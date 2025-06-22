@@ -30,3 +30,9 @@ pub(crate) struct GameLoop {
   last_frame: f64,        // 直前のフレームが リクエストされた時刻
   accumulated_delta: f32, // 最後に描画してから累積した差分時間
 }
+
+#[derive(Copy, Clone)]
+pub(crate) struct Point {
+  pub x: i16,
+  pub y: i16,
+}
