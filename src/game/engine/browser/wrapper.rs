@@ -1,7 +1,8 @@
-use crate::game::engine::browser::accessor::LoopClosure;
 use wasm_bindgen::closure::{Closure, WasmClosure, WasmClosureFnOnce};
 
-pub(crate) fn spawn_local<F>(future: F)
+use crate::game::engine::browser::LoopClosure;
+
+pub fn spawn_local<F>(future: F)
 where
   F: Future<Output = ()> + 'static,
 {

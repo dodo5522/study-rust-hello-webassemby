@@ -2,11 +2,11 @@ use anyhow::anyhow;
 use wasm_bindgen::JsCast;
 use web_sys::{Document, Window};
 
-pub(crate) fn window() -> Result<Window, anyhow::Error> {
+pub fn window() -> Result<Window, anyhow::Error> {
   web_sys::window().ok_or_else(|| anyhow!("No window object found"))
 }
 
-pub(crate) fn document() -> Result<Document, anyhow::Error> {
+pub fn document() -> Result<Document, anyhow::Error> {
   window()?
     .document()
     .ok_or_else(|| anyhow!("No document object found"))
@@ -20,7 +20,7 @@ fn _canvas(element_id: &str) -> Result<web_sys::HtmlCanvasElement, anyhow::Error
     .map_err(|element| anyhow!("Error converting {:#?} to HtmlCanvasElement", element))
 }
 
-pub(crate) fn canvas(
+pub fn canvas(
   element_id: &str,
   dimension: &str,
 ) -> Result<web_sys::CanvasRenderingContext2d, anyhow::Error> {

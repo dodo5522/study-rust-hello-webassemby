@@ -1,14 +1,35 @@
-pub(crate) mod browser;
-pub(crate) mod loader;
-pub(crate) mod renderer;
-
-mod engine;
-
-use crate::game::engine::renderer::Renderer;
 use anyhow::Error;
 use async_trait::async_trait;
 use std::collections::HashMap;
-use web_sys::KeyboardEvent;
+use web_sys::{CanvasRenderingContext2d, KeyboardEvent};
+
+mod browser;
+pub use browser::{fetch_json, spawn_local};
+
+mod loader;
+pub use loader::load_image;
+
+mod engine_loop;
+mod key_state;
+mod renderer;
+
+#[derive(Copy, Clone)]
+pub(crate) struct Rect {
+  pub x: f32,
+  pub y: f32,
+  pub width: f32,
+  pub height: f32,
+}
+
+#[derive(Copy, Clone)]
+pub(crate) struct Point {
+  pub x: i16,
+  pub y: i16,
+}
+
+pub(crate) struct Renderer {
+  context: CanvasRenderingContext2d,
+}
 
 enum KeyPress {
   KeyDown(KeyboardEvent),
@@ -26,13 +47,7 @@ pub(crate) trait Game {
   fn draw(&self, renderer: &Renderer);
 }
 
-pub(crate) struct GameLoop {
+pub(crate) struct EngineLoop {
   last_frame: f64,        // 直前のフレームが リクエストされた時刻
   accumulated_delta: f32, // 最後に描画してから累積した差分時間
-}
-
-#[derive(Copy, Clone)]
-pub(crate) struct Point {
-  pub x: i16,
-  pub y: i16,
 }
