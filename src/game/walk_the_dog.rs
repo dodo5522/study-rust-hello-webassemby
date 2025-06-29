@@ -2,9 +2,7 @@ use anyhow::{Error, anyhow};
 use async_trait::async_trait;
 use serde_wasm_bindgen::from_value;
 
-use crate::game::WalkTheDog;
-use crate::game::engine;
-use crate::game::sheet::Sheet;
+use crate::game::{WalkTheDog, engine, state};
 
 impl WalkTheDog {
   pub fn new() -> Self {
@@ -22,7 +20,7 @@ impl engine::Game for WalkTheDog {
   async fn initialize(&self) -> Result<Box<dyn engine::Game>, Error> {
     let image = engine::load_image("static/images/rhb.png").await?;
     let values = engine::fetch_json("static/coordinates/rhb.json").await?;
-    let sheet = from_value::<Sheet>(values).map_err(|e| anyhow!(""))?;
+    let sheet = from_value::<state::Sheet>(values).map_err(|e| anyhow!(""))?;
 
     Ok(Box::new(WalkTheDog {
       image: Some(image),
