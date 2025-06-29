@@ -12,4 +12,5 @@ pub struct WalkTheDog {
   sheet: Option<state::Sheet>,
   frame: i32,
   position: engine::Point,
+  rhb: Option<state::RedHatBoy>,
 }

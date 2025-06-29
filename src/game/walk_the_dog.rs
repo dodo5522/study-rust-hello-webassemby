@@ -11,6 +11,7 @@ impl WalkTheDog {
       sheet: None,
       frame: 0,
       position: engine::Point { x: 0, y: 0 },
+      rhb: None,
     }
   }
 }
@@ -23,10 +24,11 @@ impl engine::Game for WalkTheDog {
     let sheet = from_value::<state::Sheet>(values).map_err(|e| anyhow!(""))?;
 
     Ok(Box::new(WalkTheDog {
-      image: Some(image),
-      sheet: Some(sheet),
+      image: Some(image.clone()),
+      sheet: Some(sheet.clone()),
       frame: self.frame,
       position: self.position,
+      rhb: Some(state::RedHatBoy::new(sheet.clone(), image.clone())),
     }))
   }
 
