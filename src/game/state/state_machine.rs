@@ -12,7 +12,7 @@
 // | Knocked Out |          |              |                     |
 
 use crate::game::state::{
-  Falling, Jumping, RedHatBoyState, RedHatBoyStateMachine, Running, Sliding,
+  Falling, Jumping, RedHatBoyContext, RedHatBoyState, RedHatBoyStateMachine, Running, Sliding,
 };
 
 enum Event {
@@ -30,6 +30,28 @@ impl RedHatBoyStateMachine {
       (RedHatBoyStateMachine::Running(state), Event::Slide) => state.slide().into(),
       (RedHatBoyStateMachine::Running(state), Event::Crash) => state.crash().into(),
       _ => self,
+    }
+  }
+
+  pub fn context(&self) -> &RedHatBoyContext {
+    match self {
+      RedHatBoyStateMachine::Idle(state) => state.context(),
+      RedHatBoyStateMachine::Running(state) => state.context(),
+      RedHatBoyStateMachine::Jumping(state) => state.context(),
+      RedHatBoyStateMachine::Sliding(state) => state.context(),
+      RedHatBoyStateMachine::Falling(state) => state.context(),
+      RedHatBoyStateMachine::KnockedOut(state) => state.context(),
+    }
+  }
+
+  pub fn frame_name(&self) -> &str {
+    match self {
+      RedHatBoyStateMachine::Idle(state) => state.frame_name(),
+      RedHatBoyStateMachine::Running(state) => state.frame_name(),
+      RedHatBoyStateMachine::Jumping(state) => state.frame_name(),
+      RedHatBoyStateMachine::Sliding(state) => state.frame_name(),
+      RedHatBoyStateMachine::Falling(state) => state.frame_name(),
+      RedHatBoyStateMachine::KnockedOut(state) => state.frame_name(),
     }
   }
 }

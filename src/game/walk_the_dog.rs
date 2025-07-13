@@ -59,38 +59,6 @@ impl engine::Game for WalkTheDog {
   }
 
   fn draw(&self, renderer: &engine::Renderer) {
-    let current_sprite = self.frame / 3 + 1;
-    let frame_name = format!("Run ({}).png", current_sprite);
-    let cell = self
-      .sheet
-      .as_ref()
-      .and_then(|sheet| sheet.frames.get(&frame_name))
-      .expect(format!("{} not found", frame_name).as_str());
-
-    renderer.clear(engine::Rect {
-      x: 0.0,
-      y: 0.0,
-      width: 500.0,
-      height: 500.0,
-    });
-    self.image.as_ref().map(|image| {
-      renderer
-        .draw_image(
-          image,
-          &engine::Rect {
-            x: cell.frame.x as f32,
-            y: cell.frame.y as f32,
-            width: cell.frame.w as f32,
-            height: cell.frame.h as f32,
-          },
-          &engine::Rect {
-            x: self.position.x.into(),
-            y: self.position.y.into(),
-            width: cell.frame.w as f32,
-            height: cell.frame.h as f32,
-          },
-        )
-        .expect("Failed to draw image");
-    });
+    self.rhb.as_ref().map(|ref_rhb| ref_rhb.draw(renderer));
   }
 }

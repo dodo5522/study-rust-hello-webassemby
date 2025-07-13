@@ -1,17 +1,11 @@
 use crate::game::engine::Point;
 use crate::game::state::{
-  Falling, Idle, Jumping, RedHatBoy, RedHatBoyContext, RedHatBoyState, RedHatBoyStateMachine,
-  Running, Sheet, Sliding,
+  Falling, Idle, Jumping, KnockedOut, RedHatBoyContext, RedHatBoyState, Running, Sliding,
 };
-use web_sys::HtmlImageElement;
 
-impl RedHatBoy {
-  pub fn new(sheet: Sheet, image: HtmlImageElement) -> Self {
-    Self {
-      state_machine: RedHatBoyStateMachine::Idle(RedHatBoyState::<Idle>::new()),
-      sheet,
-      image,
-    }
+impl<S> RedHatBoyState<S> {
+  pub fn context(&self) -> &RedHatBoyContext {
+    &self.context
   }
 }
 
@@ -20,11 +14,15 @@ impl RedHatBoyState<Idle> {
     Self {
       context: RedHatBoyContext {
         frame: 0,
-        position: Point { x: 0, y: 475 },
+        position: Point { x: 0, y: 300 },
         velocity: Point { x: 0, y: 0 },
       },
       _state: Idle {},
     }
+  }
+
+  pub fn frame_name(&self) -> &str {
+    "Idle"
   }
 
   pub fn run(self) -> RedHatBoyState<Running> {
@@ -36,6 +34,10 @@ impl RedHatBoyState<Idle> {
 }
 
 impl RedHatBoyState<Running> {
+  pub fn frame_name(&self) -> &str {
+    "Run"
+  }
+
   pub fn jump(self) -> RedHatBoyState<Jumping> {
     RedHatBoyState {
       context: self.context,
@@ -55,5 +57,29 @@ impl RedHatBoyState<Running> {
       context: self.context,
       _state: Falling {},
     }
+  }
+}
+
+impl RedHatBoyState<Jumping> {
+  pub fn frame_name(&self) -> &str {
+    "Jump"
+  }
+}
+
+impl RedHatBoyState<Sliding> {
+  pub fn frame_name(&self) -> &str {
+    "Slide"
+  }
+}
+
+impl RedHatBoyState<Falling> {
+  pub fn frame_name(&self) -> &str {
+    "Hurt"
+  }
+}
+
+impl RedHatBoyState<KnockedOut> {
+  pub fn frame_name(&self) -> &str {
+    "Dead"
   }
 }

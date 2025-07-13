@@ -1,5 +1,6 @@
 use web_sys::HtmlImageElement;
 
+mod context;
 mod sheet;
 mod state;
 mod state_machine;
