@@ -1,6 +1,5 @@
+use walk_the_dog::game;
 use wasm_bindgen::JsValue;
-
-mod game;
 
 pub fn main() -> Result<(), JsValue> {
   wasm_logger::init(wasm_logger::Config::default());
