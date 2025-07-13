@@ -1,8 +1,19 @@
 use anyhow::{Error, anyhow};
 use async_trait::async_trait;
 use serde_wasm_bindgen::from_value;
+use web_sys::HtmlImageElement;
 
-use crate::game::{WalkTheDog, engine, state};
+use super::engine;
+use super::red_hat_boy as rhb;
+use super::sheet;
+
+pub struct WalkTheDog {
+  image: Option<HtmlImageElement>,
+  sheet: Option<sheet::Sheet>,
+  frame: i32,
+  position: engine::Point,
+  rhb: Option<rhb::RedHatBoy>,
+}
 
 impl WalkTheDog {
   pub fn new() -> Self {
@@ -21,14 +32,20 @@ impl engine::Game for WalkTheDog {
   async fn initialize(&self) -> Result<Box<dyn engine::Game>, Error> {
     let image = engine::load_image("static/images/rhb.png").await?;
     let values = engine::fetch_json("static/coordinates/rhb.json").await?;
-    let sheet = from_value::<state::Sheet>(values).map_err(|e| anyhow!(""))?;
+    let sheet = from_value::<sheet::Sheet>(values).map_err(|e| anyhow!(""))?;
 
     Ok(Box::new(WalkTheDog {
       image: Some(image.clone()),
       sheet: Some(sheet.clone()),
       frame: self.frame,
       position: self.position,
-      rhb: Some(state::RedHatBoy::new(sheet.clone(), image.clone())),
+      rhb: Some(rhb::RedHatBoy::new(
+        sheet.clone(),
+        image.clone(),
+        0,
+        self.position,
+        engine::Point { x: 0, y: 0 },
+      )),
     }))
   }
 

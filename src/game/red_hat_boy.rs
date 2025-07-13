@@ -1,11 +1,29 @@
-use crate::game::engine;
-use crate::game::state::{Idle, RedHatBoy, RedHatBoyState, RedHatBoyStateMachine, Sheet};
 use web_sys::HtmlImageElement;
 
+use super::engine;
+use super::sheet;
+use super::state_machine as state_m;
+
+pub struct RedHatBoy {
+  state_machine: state_m::RedHatBoyStateMachine,
+  sheet: sheet::Sheet,
+  image: HtmlImageElement,
+}
+
 impl RedHatBoy {
-  pub fn new(sheet: Sheet, image: HtmlImageElement) -> Self {
+  pub fn new(
+    sheet: sheet::Sheet,
+    image: HtmlImageElement,
+    initial_frame: u8,
+    initial_position: engine::Point,
+    initial_velocity: engine::Point,
+  ) -> Self {
     Self {
-      state_machine: RedHatBoyStateMachine::Idle(RedHatBoyState::<Idle>::new()),
+      state_machine: state_m::RedHatBoyStateMachine::Idle(state_m::RedHatBoyStateIdle::new(
+        initial_frame,
+        initial_position,
+        initial_velocity,
+      )),
       sheet,
       image,
     }
@@ -15,7 +33,7 @@ impl RedHatBoy {
     let frame_name = format!(
       "{} ({}).png",
       self.state_machine.frame_name(),
-      self.state_machine.context().frame / 3 + 1,
+      self.state_machine.context().frame() / 3 + 1,
     );
     let cell = self
       .sheet
@@ -33,8 +51,8 @@ impl RedHatBoy {
           height: cell.frame.h as f32,
         },
         &engine::Rect {
-          x: self.state_machine.context().position.x.into(),
-          y: self.state_machine.context().position.y.into(),
+          x: self.state_machine.context().position().x.into(),
+          y: self.state_machine.context().position().y.into(),
           width: cell.frame.w as f32,
           height: cell.frame.h as f32,
         },

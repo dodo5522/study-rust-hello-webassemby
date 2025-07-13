@@ -1,16 +1,13 @@
-use web_sys::HtmlImageElement;
-
 mod engine;
 pub type GameLoop = engine::EngineLoop;
 pub use engine::spawn_local;
 
-mod state;
-mod walk_the_dog;
+mod red_hat_boy;
 
-pub struct WalkTheDog {
-  image: Option<HtmlImageElement>,
-  sheet: Option<state::Sheet>,
-  frame: i32,
-  position: engine::Point,
-  rhb: Option<state::RedHatBoy>,
-}
+mod sheet;
+pub use sheet::Sheet;
+
+mod state_machine;
+
+mod walk_the_dog;
+pub use walk_the_dog::WalkTheDog;

@@ -1,7 +1,14 @@
-use crate::game::engine::Point;
-use crate::game::state::{
-  Falling, Idle, Jumping, KnockedOut, RedHatBoyContext, RedHatBoyState, Running, Sliding,
-};
+use super::RedHatBoyContext;
+use super::engine;
+use super::{Falling, Idle, Jumping, KnockedOut, Running, Sliding};
+
+pub type RedHatBoyStateIdle = RedHatBoyState<Idle>;
+
+#[derive(Copy, Clone)]
+pub struct RedHatBoyState<S> {
+  context: RedHatBoyContext,
+  _state: S,
+}
 
 impl<S> RedHatBoyState<S> {
   pub fn context(&self) -> &RedHatBoyContext {
@@ -10,13 +17,13 @@ impl<S> RedHatBoyState<S> {
 }
 
 impl RedHatBoyState<Idle> {
-  pub fn new() -> Self {
+  pub fn new(
+    initial_frame: u8,
+    initial_position: engine::Point,
+    initial_velocity: engine::Point,
+  ) -> Self {
     Self {
-      context: RedHatBoyContext {
-        frame: 0,
-        position: Point { x: 0, y: 300 },
-        velocity: Point { x: 0, y: 0 },
-      },
+      context: RedHatBoyContext::new(initial_frame, initial_position, initial_velocity),
       _state: Idle {},
     }
   }
