@@ -34,4 +34,9 @@ impl RedHatBoyContext {
     self.position.y += self.velocity.y;
     self
   }
+
+  pub fn reset_frame(mut self) -> Self {
+    self.frame = 0;
+    self
+  }
 }

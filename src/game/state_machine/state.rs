@@ -41,7 +41,7 @@ impl RedHatBoyState<Idle> {
 
   pub fn run(self) -> RedHatBoyState<Running> {
     RedHatBoyState {
-      context: self.context,
+      context: self.context.reset_frame(),
       _state: Running {},
     }
   }
