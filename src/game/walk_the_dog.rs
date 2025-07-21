@@ -51,13 +51,6 @@ impl engine::Game for WalkTheDog {
 
   fn update(&mut self, key_state: &engine::KeyState) {
     let mut velocity = engine::Point { x: 0, y: 0 };
-
-    if self.frame < 23 {
-      self.frame += 1;
-    } else {
-      self.frame = 0;
-    }
-
     if key_state.is_pressed("ArrowUp") {
       velocity.y -= 3;
     }
@@ -71,8 +64,7 @@ impl engine::Game for WalkTheDog {
       velocity.x -= 3;
     }
 
-    self.position.x += velocity.x;
-    self.position.y += velocity.y;
+    self.rhb.as_mut().expect("Cannot get mutable rhb").update();
   }
 
   fn draw(&self, renderer: &engine::Renderer) {

@@ -15,6 +15,7 @@ use super::RedHatBoyContext;
 use super::state;
 use super::{Falling, Idle, Jumping, KnockedOut, Running, Sliding};
 
+#[derive(Copy, Clone)]
 pub enum RedHatBoyStateMachine {
   Idle(state::RedHatBoyState<Idle>),
   Running(state::RedHatBoyState<Running>),
@@ -61,6 +62,35 @@ impl RedHatBoyStateMachine {
       RedHatBoyStateMachine::Sliding(state) => state.frame_name(),
       RedHatBoyStateMachine::Falling(state) => state.frame_name(),
       RedHatBoyStateMachine::KnockedOut(state) => state.frame_name(),
+    }
+  }
+
+  pub fn update(mut self) -> Self {
+    match self {
+      RedHatBoyStateMachine::Idle(mut state) => {
+        state.update();
+        RedHatBoyStateMachine::Idle(state)
+      }
+      RedHatBoyStateMachine::Running(mut state) => {
+        state.update();
+        RedHatBoyStateMachine::Running(state)
+      }
+      RedHatBoyStateMachine::Jumping(mut state) => {
+        state.update();
+        RedHatBoyStateMachine::Jumping(state)
+      }
+      RedHatBoyStateMachine::Sliding(mut state) => {
+        state.update();
+        RedHatBoyStateMachine::Sliding(state)
+      }
+      RedHatBoyStateMachine::Falling(mut state) => {
+        state.update();
+        RedHatBoyStateMachine::Falling(state)
+      }
+      RedHatBoyStateMachine::KnockedOut(mut state) => {
+        state.update();
+        RedHatBoyStateMachine::KnockedOut(state)
+      }
     }
   }
 }

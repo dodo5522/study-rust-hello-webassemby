@@ -23,4 +23,15 @@ impl RedHatBoyContext {
   pub fn position(&self) -> engine::Point {
     self.position
   }
+
+  pub fn update(mut self, frame_count: u8) -> Self {
+    if self.frame < frame_count {
+      self.frame += 1;
+    } else {
+      self.frame = 0;
+    }
+    self.position.x += self.velocity.x;
+    self.position.y += self.velocity.y;
+    self
+  }
 }

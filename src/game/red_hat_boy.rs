@@ -59,4 +59,8 @@ impl RedHatBoy {
       )
       .expect("Failed to draw image");
   }
+
+  pub fn update(&mut self) {
+    self.state_machine = self.state_machine.update();
+  }
 }

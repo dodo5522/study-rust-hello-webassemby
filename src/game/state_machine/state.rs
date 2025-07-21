@@ -10,6 +10,9 @@ pub struct RedHatBoyState<S> {
   _state: S,
 }
 
+const FRAMES_IDLE: u8 = 29;
+const FRAMES_RUNNING: u8 = 23;
+
 impl<S> RedHatBoyState<S> {
   pub fn context(&self) -> &RedHatBoyContext {
     &self.context
@@ -32,6 +35,10 @@ impl RedHatBoyState<Idle> {
     "Idle"
   }
 
+  pub fn update(&mut self) {
+    self.context = self.context.update(FRAMES_IDLE);
+  }
+
   pub fn run(self) -> RedHatBoyState<Running> {
     RedHatBoyState {
       context: self.context,
@@ -43,6 +50,10 @@ impl RedHatBoyState<Idle> {
 impl RedHatBoyState<Running> {
   pub fn frame_name(&self) -> &str {
     "Run"
+  }
+
+  pub fn update(&mut self) {
+    self.context = self.context.update(FRAMES_RUNNING);
   }
 
   pub fn jump(self) -> RedHatBoyState<Jumping> {
@@ -71,11 +82,19 @@ impl RedHatBoyState<Jumping> {
   pub fn frame_name(&self) -> &str {
     "Jump"
   }
+
+  pub fn update(&mut self) {
+    self.context = self.context.update(1);
+  }
 }
 
 impl RedHatBoyState<Sliding> {
   pub fn frame_name(&self) -> &str {
     "Slide"
+  }
+
+  pub fn update(&mut self) {
+    self.context = self.context.update(1);
   }
 }
 
@@ -83,10 +102,18 @@ impl RedHatBoyState<Falling> {
   pub fn frame_name(&self) -> &str {
     "Hurt"
   }
+
+  pub fn update(&mut self) {
+    self.context = self.context.update(1);
+  }
 }
 
 impl RedHatBoyState<KnockedOut> {
   pub fn frame_name(&self) -> &str {
     "Dead"
+  }
+
+  pub fn update(&mut self) {
+    self.context = self.context.update(1);
   }
 }
