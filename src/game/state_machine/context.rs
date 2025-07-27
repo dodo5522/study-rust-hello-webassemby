@@ -39,4 +39,9 @@ impl RedHatBoyContext {
     self.frame = 0;
     self
   }
+
+  pub fn run_right(mut self) -> Self {
+    self.velocity.x += 3;
+    self
+  }
 }
