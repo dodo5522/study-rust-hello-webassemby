@@ -10,13 +10,22 @@ pub struct RedHatBoyState<S> {
   _state: S,
 }
 
-const FRAMES_IDLE: u8 = 29;
-const FRAMES_RUNNING: u8 = 23;
-
 impl<S> RedHatBoyState<S> {
   pub fn context(&self) -> &RedHatBoyContext {
     &self.context
   }
+}
+
+impl Idle {
+  pub const FRAMES: u8 = 29;
+}
+
+impl Running {
+  pub const FRAMES: u8 = 23;
+}
+
+impl Sliding {
+  pub const FRAMES: u8 = 14;
 }
 
 impl RedHatBoyState<Idle> {
@@ -36,7 +45,7 @@ impl RedHatBoyState<Idle> {
   }
 
   pub fn update(&mut self) {
-    self.context = self.context.update(FRAMES_IDLE);
+    self.context = self.context.update(Idle::FRAMES);
   }
 
   pub fn run(self) -> RedHatBoyState<Running> {
@@ -53,7 +62,7 @@ impl RedHatBoyState<Running> {
   }
 
   pub fn update(&mut self) {
-    self.context = self.context.update(FRAMES_RUNNING);
+    self.context = self.context.update(Running::FRAMES);
   }
 
   pub fn jump(self) -> RedHatBoyState<Jumping> {
@@ -94,7 +103,7 @@ impl RedHatBoyState<Sliding> {
   }
 
   pub fn update(&mut self) {
-    self.context = self.context.update(1);
+    self.context = self.context.update(Sliding::FRAMES);
   }
 }
 

@@ -36,18 +36,16 @@ impl engine::Game for WalkTheDog {
 
   fn update(&mut self, key_state: &engine::KeyState) {
     let mut velocity = engine::Point { x: 0, y: 0 };
+    let mut rhb = self.rhb.as_mut().unwrap();
+
     if key_state.is_pressed("ArrowUp") {
       velocity.y -= 3;
     }
     if key_state.is_pressed("ArrowDown") {
-      velocity.y += 3;
+      rhb.slide();
     }
     if key_state.is_pressed("ArrowRight") {
-      self
-        .rhb
-        .as_mut()
-        .expect("Cannot get RedHatBoy instance")
-        .run_right();
+      rhb.run_right();
     }
     if key_state.is_pressed("ArrowLeft") {
       velocity.x -= 3;

@@ -73,4 +73,8 @@ impl RedHatBoy {
   pub fn run_right(&mut self) {
     self.state_machine = self.state_machine.transition(state_m::Event::Run);
   }
+
+  pub fn slide(&mut self) {
+    self.state_machine = self.state_machine.transition(state_m::Event::Slide);
+  }
 }
