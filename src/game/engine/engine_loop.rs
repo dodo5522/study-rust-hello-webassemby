@@ -13,7 +13,7 @@ type SharedLoopClosure = Rc<RefCell<Option<browser::LoopClosure>>>;
 const FRAME_GAP_MS: f32 = 1.0 / 60.0 * 1000.0;
 
 impl EngineLoop {
-  pub(crate) async fn start(game: impl Game + 'static) -> Result<(), Error> {
+  pub async fn start(game: impl Game + 'static) -> Result<(), Error> {
     let mut key_receiver = prepare_input()?;
     let mut game = game.initialize().await?;
     let mut game_loop = EngineLoop {

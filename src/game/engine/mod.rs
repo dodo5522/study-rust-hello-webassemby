@@ -14,7 +14,7 @@ mod key_state;
 mod renderer;
 
 #[derive(Copy, Clone)]
-pub(crate) struct Rect {
+pub struct Rect {
   pub x: f32,
   pub y: f32,
   pub width: f32,
@@ -22,12 +22,12 @@ pub(crate) struct Rect {
 }
 
 #[derive(Copy, Clone)]
-pub(crate) struct Point {
+pub struct Point {
   pub x: i16,
   pub y: i16,
 }
 
-pub(crate) struct Renderer {
+pub struct Renderer {
   context: CanvasRenderingContext2d,
 }
 
@@ -36,18 +36,18 @@ enum KeyPress {
   KeyUp(KeyboardEvent),
 }
 
-pub(crate) struct KeyState {
+pub struct KeyState {
   pressed_keys: HashMap<String, KeyboardEvent>,
 }
 
 #[async_trait(?Send)]
-pub(crate) trait Game {
+pub trait Game {
   async fn initialize(&self) -> Result<Box<dyn Game>, Error>;
   fn update(&mut self, key_state: &KeyState);
   fn draw(&self, renderer: &Renderer);
 }
 
-pub(crate) struct EngineLoop {
+pub struct EngineLoop {
   last_frame: f64,        // 直前のフレームが リクエストされた時刻
   accumulated_delta: f32, // 最後に描画してから累積した差分時間
 }
