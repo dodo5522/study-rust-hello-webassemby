@@ -1,29 +1,18 @@
 use anyhow::{Error, anyhow};
 use async_trait::async_trait;
 use serde_wasm_bindgen::from_value;
-use web_sys::HtmlImageElement;
 
 use super::engine;
 use super::red_hat_boy as rhb;
 use super::sheet;
 
 pub struct WalkTheDog {
-  image: Option<HtmlImageElement>,
-  sheet: Option<sheet::Sheet>,
-  frame: i32,
-  position: engine::Point,
   rhb: Option<rhb::RedHatBoy>,
 }
 
 impl WalkTheDog {
   pub fn new() -> Self {
-    Self {
-      image: None,
-      sheet: None,
-      frame: 0,
-      position: engine::Point { x: 0, y: 0 },
-      rhb: None,
-    }
+    Self { rhb: None }
   }
 }
 
@@ -35,15 +24,11 @@ impl engine::Game for WalkTheDog {
     let sheet = from_value::<sheet::Sheet>(values).map_err(|e| anyhow!(""))?;
 
     Ok(Box::new(WalkTheDog {
-      image: Some(image.clone()),
-      sheet: Some(sheet.clone()),
-      frame: self.frame,
-      position: self.position,
       rhb: Some(rhb::RedHatBoy::new(
         sheet.clone(),
         image.clone(),
         0,
-        self.position,
+        engine::Point { x: 0, y: 0 },
         engine::Point { x: 0, y: 0 },
       )),
     }))
