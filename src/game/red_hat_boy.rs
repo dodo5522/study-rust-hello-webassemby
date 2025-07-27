@@ -41,6 +41,12 @@ impl RedHatBoy {
       .get(&frame_name)
       .expect(format!("{} not found", frame_name).as_str());
 
+    renderer.clear(engine::Rect {
+      x: 0.0,
+      y: 0.0,
+      width: 500.0,
+      height: 500.0,
+    });
     renderer
       .draw_image(
         &self.image,
@@ -62,5 +68,9 @@ impl RedHatBoy {
 
   pub fn update(&mut self) {
     self.state_machine = self.state_machine.update();
+  }
+
+  pub fn run_right(&mut self) {
+    self.state_machine = self.state_machine.transition(state_m::Event::Run);
   }
 }

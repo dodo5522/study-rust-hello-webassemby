@@ -58,7 +58,11 @@ impl engine::Game for WalkTheDog {
       velocity.y += 3;
     }
     if key_state.is_pressed("ArrowRight") {
-      velocity.x += 3;
+      self
+        .rhb
+        .as_mut()
+        .expect("Cannot get RedHatBoy instance")
+        .run_right();
     }
     if key_state.is_pressed("ArrowLeft") {
       velocity.x -= 3;
