@@ -80,7 +80,11 @@ impl RedHatBoyStateMachine {
       }
       RedHatBoyStateMachine::Sliding(mut state) => {
         state.update();
-        RedHatBoyStateMachine::Sliding(state)
+        if state.context().frame() >= Sliding::FRAMES {
+          RedHatBoyStateMachine::Idle(state.stand())
+        } else {
+          RedHatBoyStateMachine::Sliding(state)
+        }
       }
       RedHatBoyStateMachine::Falling(mut state) => {
         state.update();
@@ -91,6 +95,12 @@ impl RedHatBoyStateMachine {
         RedHatBoyStateMachine::KnockedOut(state)
       }
     }
+  }
+}
+
+impl From<RedHatBoyState<Idle>> for RedHatBoyStateMachine {
+  fn from(state: RedHatBoyState<Idle>) -> Self {
+    RedHatBoyStateMachine::Idle(state)
   }
 }
 

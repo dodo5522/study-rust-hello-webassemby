@@ -1,4 +1,4 @@
-use super::{Falling, Jumping, RedHatBoyState, Sliding};
+use super::{Falling, Idle, Jumping, RedHatBoyState, Sliding};
 
 #[derive(Copy, Clone)]
 pub struct Running;

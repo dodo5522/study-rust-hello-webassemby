@@ -44,4 +44,9 @@ impl RedHatBoyContext {
     self.velocity.x += 3;
     self
   }
+
+  pub fn stop(mut self) -> Self {
+    self.velocity.x = 0;
+    self
+  }
 }
