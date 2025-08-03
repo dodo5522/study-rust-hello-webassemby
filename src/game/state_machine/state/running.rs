@@ -36,4 +36,11 @@ impl RedHatBoyState<Running> {
       _state: Falling {},
     }
   }
+
+  pub fn stand(self) -> RedHatBoyState<Idle> {
+    RedHatBoyState {
+      context: self.context.stop(),
+      _state: Idle {},
+    }
+  }
 }

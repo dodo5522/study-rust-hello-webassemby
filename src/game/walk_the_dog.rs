@@ -48,7 +48,7 @@ impl engine::Game for WalkTheDog {
       rhb.run_right();
     }
     if key_state.is_pressed("ArrowLeft") {
-      velocity.x -= 3;
+      rhb.stop();
     }
 
     self.rhb.as_mut().expect("Cannot get mutable rhb").update();

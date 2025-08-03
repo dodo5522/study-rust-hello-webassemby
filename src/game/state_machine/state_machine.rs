@@ -29,6 +29,7 @@ pub enum Event {
   Jump,
   Slide,
   Crash,
+  Stop,
 }
 
 impl RedHatBoyStateMachine {
@@ -38,6 +39,7 @@ impl RedHatBoyStateMachine {
       (RedHatBoyStateMachine::Running(state), Event::Jump) => state.jump().into(),
       (RedHatBoyStateMachine::Running(state), Event::Slide) => state.slide().into(),
       (RedHatBoyStateMachine::Running(state), Event::Crash) => state.crash().into(),
+      (RedHatBoyStateMachine::Running(state), Event::Stop) => state.stand().into(),
       _ => self,
     }
   }
