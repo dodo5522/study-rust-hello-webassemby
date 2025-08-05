@@ -12,8 +12,9 @@ impl RedHatBoyState<Running> {
     "Run"
   }
 
-  pub fn update(&mut self) {
+  pub fn update(mut self) -> Self {
     self.context = self.context.update(Running::FRAMES);
+    self
   }
 
   pub fn jump(self) -> RedHatBoyState<Jumping> {

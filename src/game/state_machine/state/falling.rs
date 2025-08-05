@@ -8,7 +8,8 @@ impl RedHatBoyState<Falling> {
     "Hurt"
   }
 
-  pub fn update(&mut self) {
+  pub fn update(mut self) -> Self {
     self.context = self.context.update(1);
+    self
   }
 }

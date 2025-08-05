@@ -26,8 +26,9 @@ impl RedHatBoyState<Idle> {
     "Idle"
   }
 
-  pub fn update(&mut self) {
+  pub fn update(mut self) -> Self {
     self.context = self.context.update(Idle::FRAMES);
+    self
   }
 
   pub fn run(self) -> RedHatBoyState<Running> {

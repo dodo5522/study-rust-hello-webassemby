@@ -12,8 +12,9 @@ impl RedHatBoyState<Sliding> {
     "Slide"
   }
 
-  pub fn update(&mut self) {
+  pub fn update(mut self) -> Self {
     self.context = self.context.update(Sliding::FRAMES);
+    self
   }
 
   pub fn stand(&self) -> RedHatBoyState<Idle> {

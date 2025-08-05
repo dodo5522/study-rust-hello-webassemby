@@ -30,16 +30,17 @@ pub enum Event {
   Slide,
   Crash,
   Stop,
+  Update,
 }
 
 impl RedHatBoyStateMachine {
   pub fn transition(self, event: Event) -> Self {
     match (&self, event) {
       (RedHatBoyStateMachine::Idle(state), Event::Run) => state.run().into(),
-      (RedHatBoyStateMachine::Running(state), Event::Jump) => state.jump().into(),
+      (RedHatBoyStateMachine::Idle(state), Event::Update) => state.update().into(),
       (RedHatBoyStateMachine::Running(state), Event::Slide) => state.slide().into(),
-      (RedHatBoyStateMachine::Running(state), Event::Crash) => state.crash().into(),
       (RedHatBoyStateMachine::Running(state), Event::Stop) => state.stand().into(),
+      (RedHatBoyStateMachine::Running(state), Event::Update) => state.update().into(),
       _ => self,
     }
   }
@@ -67,36 +68,7 @@ impl RedHatBoyStateMachine {
   }
 
   pub fn update(mut self) -> Self {
-    match self {
-      RedHatBoyStateMachine::Idle(mut state) => {
-        state.update();
-        RedHatBoyStateMachine::Idle(state)
-      }
-      RedHatBoyStateMachine::Running(mut state) => {
-        state.update();
-        RedHatBoyStateMachine::Running(state)
-      }
-      RedHatBoyStateMachine::Jumping(mut state) => {
-        state.update();
-        RedHatBoyStateMachine::Jumping(state)
-      }
-      RedHatBoyStateMachine::Sliding(mut state) => {
-        state.update();
-        if state.context().frame() >= Sliding::FRAMES {
-          RedHatBoyStateMachine::Idle(state.stand())
-        } else {
-          RedHatBoyStateMachine::Sliding(state)
-        }
-      }
-      RedHatBoyStateMachine::Falling(mut state) => {
-        state.update();
-        RedHatBoyStateMachine::Falling(state)
-      }
-      RedHatBoyStateMachine::KnockedOut(mut state) => {
-        state.update();
-        RedHatBoyStateMachine::KnockedOut(state)
-      }
-    }
+    self.transition(Event::Update)
   }
 }
 
