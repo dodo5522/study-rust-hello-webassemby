@@ -12,17 +12,17 @@
 // | Knocked Out |          |              |                     |
 
 use super::RedHatBoyContext;
-use super::state;
-use super::{Falling, Idle, Jumping, KnockedOut, Running, Sliding};
+use super::state::SlidingEndState;
+use super::state::{Falling, Idle, Jumping, KnockedOut, RedHatBoyState, Running, Sliding};
 
 #[derive(Copy, Clone)]
 pub enum RedHatBoyStateMachine {
-  Idle(state::RedHatBoyState<Idle>),
-  Running(state::RedHatBoyState<Running>),
-  Jumping(state::RedHatBoyState<Jumping>),
-  Sliding(state::RedHatBoyState<Sliding>),
-  Falling(state::RedHatBoyState<Falling>),
-  KnockedOut(state::RedHatBoyState<KnockedOut>),
+  Idle(RedHatBoyState<Idle>),
+  Running(RedHatBoyState<Running>),
+  Jumping(RedHatBoyState<Jumping>),
+  Sliding(RedHatBoyState<Sliding>),
+  Falling(RedHatBoyState<Falling>),
+  KnockedOut(RedHatBoyState<KnockedOut>),
 }
 
 pub enum Event {
@@ -30,15 +30,19 @@ pub enum Event {
   Jump,
   Slide,
   Crash,
+  Stop,
+  Update,
 }
 
 impl RedHatBoyStateMachine {
   pub fn transition(self, event: Event) -> Self {
     match (&self, event) {
       (RedHatBoyStateMachine::Idle(state), Event::Run) => state.run().into(),
-      (RedHatBoyStateMachine::Running(state), Event::Jump) => state.jump().into(),
+      (RedHatBoyStateMachine::Idle(state), Event::Update) => state.update().into(),
       (RedHatBoyStateMachine::Running(state), Event::Slide) => state.slide().into(),
-      (RedHatBoyStateMachine::Running(state), Event::Crash) => state.crash().into(),
+      (RedHatBoyStateMachine::Running(state), Event::Stop) => state.stand().into(),
+      (RedHatBoyStateMachine::Running(state), Event::Update) => state.update().into(),
+      (RedHatBoyStateMachine::Sliding(state), Event::Update) => state.update().into(),
       _ => self,
     }
   }
@@ -66,55 +70,45 @@ impl RedHatBoyStateMachine {
   }
 
   pub fn update(mut self) -> Self {
-    match self {
-      RedHatBoyStateMachine::Idle(mut state) => {
-        state.update();
-        RedHatBoyStateMachine::Idle(state)
-      }
-      RedHatBoyStateMachine::Running(mut state) => {
-        state.update();
-        RedHatBoyStateMachine::Running(state)
-      }
-      RedHatBoyStateMachine::Jumping(mut state) => {
-        state.update();
-        RedHatBoyStateMachine::Jumping(state)
-      }
-      RedHatBoyStateMachine::Sliding(mut state) => {
-        state.update();
-        RedHatBoyStateMachine::Sliding(state)
-      }
-      RedHatBoyStateMachine::Falling(mut state) => {
-        state.update();
-        RedHatBoyStateMachine::Falling(state)
-      }
-      RedHatBoyStateMachine::KnockedOut(mut state) => {
-        state.update();
-        RedHatBoyStateMachine::KnockedOut(state)
-      }
-    }
+    self.transition(Event::Update)
   }
 }
 
-impl From<state::RedHatBoyState<Running>> for RedHatBoyStateMachine {
-  fn from(state: state::RedHatBoyState<Running>) -> Self {
+impl From<RedHatBoyState<Idle>> for RedHatBoyStateMachine {
+  fn from(state: RedHatBoyState<Idle>) -> Self {
+    RedHatBoyStateMachine::Idle(state)
+  }
+}
+
+impl From<RedHatBoyState<Running>> for RedHatBoyStateMachine {
+  fn from(state: RedHatBoyState<Running>) -> Self {
     RedHatBoyStateMachine::Running(state)
   }
 }
 
-impl From<state::RedHatBoyState<Jumping>> for RedHatBoyStateMachine {
-  fn from(state: state::RedHatBoyState<Jumping>) -> Self {
+impl From<RedHatBoyState<Jumping>> for RedHatBoyStateMachine {
+  fn from(state: RedHatBoyState<Jumping>) -> Self {
     RedHatBoyStateMachine::Jumping(state)
   }
 }
 
-impl From<state::RedHatBoyState<Sliding>> for RedHatBoyStateMachine {
-  fn from(state: state::RedHatBoyState<Sliding>) -> Self {
+impl From<RedHatBoyState<Sliding>> for RedHatBoyStateMachine {
+  fn from(state: RedHatBoyState<Sliding>) -> Self {
     RedHatBoyStateMachine::Sliding(state)
   }
 }
 
-impl From<state::RedHatBoyState<Falling>> for RedHatBoyStateMachine {
-  fn from(state: state::RedHatBoyState<Falling>) -> Self {
+impl From<SlidingEndState> for RedHatBoyStateMachine {
+  fn from(end_state: SlidingEndState) -> Self {
+    match end_state {
+      SlidingEndState::Sliding(state) => state.into(),
+      SlidingEndState::Complete(state) => state.into(),
+    }
+  }
+}
+
+impl From<RedHatBoyState<Falling>> for RedHatBoyStateMachine {
+  fn from(state: RedHatBoyState<Falling>) -> Self {
     RedHatBoyStateMachine::Falling(state)
   }
 }
