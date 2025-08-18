@@ -1,7 +1,13 @@
-use super::{Idle, RedHatBoyState};
+use super::{Idle, RedHatBoyState, Running};
+use crate::game::state_machine::RedHatBoyStateMachine;
 
 #[derive(Copy, Clone)]
 pub struct Sliding;
+
+pub enum SlidingEndState {
+  Sliding(RedHatBoyState<Sliding>),
+  Complete(RedHatBoyState<Running>),
+}
 
 impl Sliding {
   pub const FRAMES: u8 = 14;
@@ -12,15 +18,20 @@ impl RedHatBoyState<Sliding> {
     "Slide"
   }
 
-  pub fn update(mut self) -> Self {
+  pub fn update(mut self) -> SlidingEndState {
     self.context = self.context.update(Sliding::FRAMES);
-    self
+
+    if self.context.frame() >= Sliding::FRAMES {
+      SlidingEndState::Complete(self.stand())
+    } else {
+      SlidingEndState::Sliding(self)
+    }
   }
 
-  pub fn stand(&self) -> RedHatBoyState<Idle> {
+  pub fn stand(&self) -> RedHatBoyState<Running> {
     RedHatBoyState {
-      context: self.context.stop(),
-      _state: Idle {},
+      context: self.context.reset_frame(),
+      _state: Running {},
     }
   }
 }

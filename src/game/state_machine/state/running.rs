@@ -26,7 +26,7 @@ impl RedHatBoyState<Running> {
 
   pub fn slide(self) -> RedHatBoyState<Sliding> {
     RedHatBoyState {
-      context: self.context,
+      context: self.context.reset_frame(),
       _state: Sliding {},
     }
   }

@@ -12,6 +12,7 @@ mod running;
 pub use running::Running;
 mod sliding;
 pub use sliding::Sliding;
+pub use sliding::SlidingEndState;
 
 #[derive(Copy, Clone)]
 pub struct RedHatBoyState<S> {

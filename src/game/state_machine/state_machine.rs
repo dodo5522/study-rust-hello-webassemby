@@ -12,6 +12,7 @@
 // | Knocked Out |          |              |                     |
 
 use super::RedHatBoyContext;
+use super::state::SlidingEndState;
 use super::state::{Falling, Idle, Jumping, KnockedOut, RedHatBoyState, Running, Sliding};
 
 #[derive(Copy, Clone)]
@@ -41,6 +42,7 @@ impl RedHatBoyStateMachine {
       (RedHatBoyStateMachine::Running(state), Event::Slide) => state.slide().into(),
       (RedHatBoyStateMachine::Running(state), Event::Stop) => state.stand().into(),
       (RedHatBoyStateMachine::Running(state), Event::Update) => state.update().into(),
+      (RedHatBoyStateMachine::Sliding(state), Event::Update) => state.update().into(),
       _ => self,
     }
   }
@@ -93,6 +95,15 @@ impl From<RedHatBoyState<Jumping>> for RedHatBoyStateMachine {
 impl From<RedHatBoyState<Sliding>> for RedHatBoyStateMachine {
   fn from(state: RedHatBoyState<Sliding>) -> Self {
     RedHatBoyStateMachine::Sliding(state)
+  }
+}
+
+impl From<SlidingEndState> for RedHatBoyStateMachine {
+  fn from(end_state: SlidingEndState) -> Self {
+    match end_state {
+      SlidingEndState::Sliding(state) => state.into(),
+      SlidingEndState::Complete(state) => state.into(),
+    }
   }
 }
 
