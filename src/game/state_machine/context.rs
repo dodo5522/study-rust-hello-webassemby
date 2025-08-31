@@ -49,4 +49,9 @@ impl RedHatBoyContext {
     self.velocity.x = 0;
     self
   }
+
+  pub fn set_vertical_velocity(mut self, y: i16) -> Self {
+    self.velocity.y = y;
+    self
+  }
 }

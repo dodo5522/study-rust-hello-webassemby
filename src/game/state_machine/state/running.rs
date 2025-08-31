@@ -4,7 +4,8 @@ use super::{Falling, Idle, Jumping, RedHatBoyState, Sliding};
 pub struct Running;
 
 impl Running {
-  pub const FRAMES: u8 = 23;
+  const FRAMES: u8 = 23;
+  const SPEED_JUMP: i16 = -20;
 }
 
 impl RedHatBoyState<Running> {
@@ -19,7 +20,10 @@ impl RedHatBoyState<Running> {
 
   pub fn jump(self) -> RedHatBoyState<Jumping> {
     RedHatBoyState {
-      context: self.context.reset_frame(),
+      context: self
+        .context
+        .set_vertical_velocity(Running::SPEED_JUMP)
+        .reset_frame(),
       _state: Jumping {},
     }
   }
