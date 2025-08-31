@@ -8,6 +8,7 @@ pub struct RedHatBoyContext {
 }
 
 impl RedHatBoyContext {
+  const FLOOR: i16 = 350;
   const GRAVITY: i16 = 1;
 
   pub fn new(frame: u8, position: engine::Point, velocity: engine::Point) -> Self {
@@ -36,6 +37,10 @@ impl RedHatBoyContext {
 
     self.position.x += self.velocity.x;
     self.position.y += self.velocity.y;
+
+    if self.position.y > Self::FLOOR {
+      self.position.y = Self::FLOOR;
+    }
     self
   }
 

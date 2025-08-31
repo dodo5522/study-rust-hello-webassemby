@@ -29,7 +29,7 @@ impl engine::Game for WalkTheDog {
           sheet.clone(),
           image.clone(),
           0,
-          engine::Point { x: 0, y: 0 },
+          engine::Point { x: 0, y: 350 },
           engine::Point { x: 0, y: 0 },
         );
         Ok(Box::new(WalkTheDog::Loaded(rhb)))
