@@ -8,6 +8,8 @@ pub struct RedHatBoyContext {
 }
 
 impl RedHatBoyContext {
+  const GRAVITY: i16 = 1;
+
   pub fn new(frame: u8, position: engine::Point, velocity: engine::Point) -> Self {
     RedHatBoyContext {
       frame,
@@ -30,6 +32,8 @@ impl RedHatBoyContext {
     } else {
       self.frame = 0;
     }
+    self.velocity.y += Self::GRAVITY;
+
     self.position.x += self.velocity.x;
     self.position.y += self.velocity.y;
     self
