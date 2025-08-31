@@ -81,4 +81,8 @@ impl RedHatBoy {
   pub fn stop(&mut self) {
     self.state_machine = self.state_machine.transition(state_m::Event::Stop);
   }
+
+  pub fn jump(&mut self) {
+    self.state_machine = self.state_machine.transition(state_m::Event::Jump);
+  }
 }

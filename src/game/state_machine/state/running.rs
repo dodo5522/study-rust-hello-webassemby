@@ -19,7 +19,7 @@ impl RedHatBoyState<Running> {
 
   pub fn jump(self) -> RedHatBoyState<Jumping> {
     RedHatBoyState {
-      context: self.context,
+      context: self.context.reset_frame(),
       _state: Jumping {},
     }
   }

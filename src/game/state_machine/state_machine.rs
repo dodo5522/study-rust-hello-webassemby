@@ -42,6 +42,8 @@ impl RedHatBoyStateMachine {
       (RedHatBoyStateMachine::Running(state), Event::Slide) => state.slide().into(),
       (RedHatBoyStateMachine::Running(state), Event::Stop) => state.stand().into(),
       (RedHatBoyStateMachine::Running(state), Event::Update) => state.update().into(),
+      (RedHatBoyStateMachine::Running(state), Event::Jump) => state.jump().into(),
+      (RedHatBoyStateMachine::Jumping(state), Event::Update) => state.update().into(),
       (RedHatBoyStateMachine::Sliding(state), Event::Update) => state.update().into(),
       _ => self,
     }
