@@ -2,6 +2,7 @@ use super::engine;
 
 #[derive(Copy, Clone)]
 pub struct RedHatBoyContext {
+  ground: i16,
   frame: u8,
   position: engine::Point,
   velocity: engine::Point,
@@ -13,6 +14,7 @@ impl RedHatBoyContext {
 
   pub fn new(frame: u8, position: engine::Point, velocity: engine::Point) -> Self {
     RedHatBoyContext {
+      ground: Self::FLOOR,
       frame,
       position,
       velocity,
@@ -27,6 +29,10 @@ impl RedHatBoyContext {
     self.position
   }
 
+  pub fn ground(&self) -> i16 {
+    self.ground
+  }
+
   pub fn update(mut self, frame_count: u8) -> Self {
     if self.frame < frame_count {
       self.frame += 1;
@@ -38,8 +44,8 @@ impl RedHatBoyContext {
     self.position.x += self.velocity.x;
     self.position.y += self.velocity.y;
 
-    if self.position.y > Self::FLOOR {
-      self.position.y = Self::FLOOR;
+    if self.position.y > self.ground {
+      self.position.y = self.ground;
     }
     self
   }

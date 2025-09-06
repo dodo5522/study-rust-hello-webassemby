@@ -1,5 +1,4 @@
-use super::{Idle, RedHatBoyState, Running};
-use crate::game::state_machine::RedHatBoyStateMachine;
+use super::{RedHatBoyState, Running};
 
 #[derive(Copy, Clone)]
 pub struct Sliding;
@@ -28,7 +27,7 @@ impl RedHatBoyState<Sliding> {
     }
   }
 
-  pub fn stand(&self) -> RedHatBoyState<Running> {
+  fn stand(&self) -> RedHatBoyState<Running> {
     RedHatBoyState {
       context: self.context.reset_frame(),
       _state: Running {},

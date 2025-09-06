@@ -12,8 +12,8 @@
 // | Knocked Out |          |              |                     |
 
 use super::RedHatBoyContext;
-use super::state::SlidingEndState;
 use super::state::{Falling, Idle, Jumping, KnockedOut, RedHatBoyState, Running, Sliding};
+use super::state::{JumpingEndState, SlidingEndState};
 
 #[derive(Copy, Clone)]
 pub enum RedHatBoyStateMachine {
@@ -91,6 +91,15 @@ impl From<RedHatBoyState<Running>> for RedHatBoyStateMachine {
 impl From<RedHatBoyState<Jumping>> for RedHatBoyStateMachine {
   fn from(state: RedHatBoyState<Jumping>) -> Self {
     RedHatBoyStateMachine::Jumping(state)
+  }
+}
+
+impl From<JumpingEndState> for RedHatBoyStateMachine {
+  fn from(end_state: JumpingEndState) -> Self {
+    match end_state {
+      JumpingEndState::Jumping(state) => state.into(),
+      JumpingEndState::Complete(state) => state.into(),
+    }
   }
 }
 

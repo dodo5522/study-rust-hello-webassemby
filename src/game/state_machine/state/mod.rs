@@ -6,6 +6,7 @@ mod idle;
 pub use idle::{Idle, RedHatBoyStateIdle};
 mod jumping;
 pub use jumping::Jumping;
+pub use jumping::JumpingEndState;
 mod knocked_out;
 pub use knocked_out::KnockedOut;
 mod running;

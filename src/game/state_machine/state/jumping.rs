@@ -1,8 +1,13 @@
-use crate::game::state_machine::Event::Jump;
 use super::RedHatBoyState;
+use super::Running;
 
 #[derive(Copy, Clone)]
 pub struct Jumping;
+
+pub enum JumpingEndState {
+  Jumping(RedHatBoyState<Jumping>),
+  Complete(RedHatBoyState<Running>),
+}
 
 impl Jumping {
   const FRAMES: u8 = 35;
@@ -13,8 +18,20 @@ impl RedHatBoyState<Jumping> {
     "Jump"
   }
 
-  pub fn update(mut self) -> Self {
+  pub fn update(mut self) -> JumpingEndState {
     self.context = self.context.update(Jumping::FRAMES);
-    self
+
+    if self.context.position().y < self.context.ground() {
+      JumpingEndState::Jumping(self)
+    } else {
+      JumpingEndState::Complete(self.land())
+    }
+  }
+
+  fn land(&mut self) -> RedHatBoyState<Running> {
+    RedHatBoyState {
+      context: self.context.reset_frame(),
+      _state: Running {},
+    }
   }
 }
