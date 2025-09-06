@@ -2,29 +2,29 @@ use super::RedHatBoyState;
 use super::Running;
 
 #[derive(Copy, Clone)]
-pub struct Jumping;
+pub struct JumpingInRunning;
 
-pub enum JumpingEndState {
-  Jumping(RedHatBoyState<Jumping>),
+pub enum JumpingInRunningEndState {
+  Jumping(RedHatBoyState<JumpingInRunning>),
   Complete(RedHatBoyState<Running>),
 }
 
-impl Jumping {
+impl JumpingInRunning {
   const FRAMES: u8 = 35;
 }
 
-impl RedHatBoyState<Jumping> {
+impl RedHatBoyState<JumpingInRunning> {
   pub fn frame_name(&self) -> &str {
     "Jump"
   }
 
-  pub fn update(mut self) -> JumpingEndState {
-    self.context = self.context.update(Jumping::FRAMES);
+  pub fn update(mut self) -> JumpingInRunningEndState {
+    self.context = self.context.update(JumpingInRunning::FRAMES);
 
     if self.context.position().y < self.context.ground() {
-      JumpingEndState::Jumping(self)
+      JumpingInRunningEndState::Jumping(self)
     } else {
-      JumpingEndState::Complete(self.land())
+      JumpingInRunningEndState::Complete(self.land())
     }
   }
 
