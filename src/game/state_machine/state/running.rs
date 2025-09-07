@@ -1,10 +1,11 @@
-use super::{Falling, Idle, Jumping, RedHatBoyState, Sliding};
+use super::{Falling, Idle, JumpingInRunning, RedHatBoyState, Sliding};
 
 #[derive(Copy, Clone)]
 pub struct Running;
 
 impl Running {
-  pub const FRAMES: u8 = 23;
+  const FRAMES: u8 = 23;
+  const SPEED_JUMP: i16 = -20;
 }
 
 impl RedHatBoyState<Running> {
@@ -17,10 +18,13 @@ impl RedHatBoyState<Running> {
     self
   }
 
-  pub fn jump(self) -> RedHatBoyState<Jumping> {
+  pub fn jump(self) -> RedHatBoyState<JumpingInRunning> {
     RedHatBoyState {
-      context: self.context,
-      _state: Jumping {},
+      context: self
+        .context
+        .set_vertical_velocity(Running::SPEED_JUMP)
+        .reset_frame(),
+      _state: JumpingInRunning {},
     }
   }
 

@@ -29,7 +29,7 @@ impl engine::Game for WalkTheDog {
           sheet.clone(),
           image.clone(),
           0,
-          engine::Point { x: 0, y: 0 },
+          engine::Point { x: 0, y: 350 },
           engine::Point { x: 0, y: 0 },
         );
         Ok(Box::new(WalkTheDog::Loaded(rhb)))
@@ -52,6 +52,9 @@ impl engine::Game for WalkTheDog {
       }
       if key_state.is_pressed("ArrowLeft") {
         rhb.stop();
+      }
+      if key_state.is_pressed("Space") {
+        rhb.jump();
       }
       rhb.update();
     }

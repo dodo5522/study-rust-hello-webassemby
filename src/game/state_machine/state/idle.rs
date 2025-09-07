@@ -1,5 +1,5 @@
 use super::super::engine;
-use super::{RedHatBoyContext, RedHatBoyState, Running};
+use super::{JumpingInIdle, RedHatBoyContext, RedHatBoyState, Running};
 
 #[derive(Copy, Clone)]
 pub struct Idle;
@@ -8,6 +8,7 @@ pub type RedHatBoyStateIdle = RedHatBoyState<Idle>;
 
 impl Idle {
   pub const FRAMES: u8 = 29;
+  const SPEED_JUMP: i16 = -15;
 }
 
 impl RedHatBoyState<Idle> {
@@ -35,6 +36,16 @@ impl RedHatBoyState<Idle> {
     RedHatBoyState {
       context: self.context.reset_frame().run_right(),
       _state: Running {},
+    }
+  }
+
+  pub fn jump(self) -> RedHatBoyState<JumpingInIdle> {
+    RedHatBoyState {
+      context: self
+        .context
+        .reset_frame()
+        .set_vertical_velocity(Idle::SPEED_JUMP),
+      _state: JumpingInIdle {},
     }
   }
 }
