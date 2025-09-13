@@ -26,9 +26,10 @@ jobs:
           workspaces: .
           shared-key: ${{ env.CACHE_TIER }}
           cache-on-failure: true
-      - name: Install tools
-        run: |
-          cargo install -f --locked trunk --version ${{ env.TRUNK_VERSION }}
+      - name: Install trunk & wasm-bindgen-cli
+        uses: taiki-e/install-action@v2
+        with:
+          tool: trunk@${{ env.TRUNK_VERSION }}
       - name: Build
         run: |
           trunk build --release --public-url /rhb
