@@ -9,5 +9,8 @@ pub use sheet::Sheet;
 
 mod state_machine;
 
+mod walk;
+pub use walk::Walk;
+
 mod walk_the_dog;
 pub use walk_the_dog::WalkTheDog;

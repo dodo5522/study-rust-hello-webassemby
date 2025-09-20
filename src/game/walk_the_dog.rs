@@ -5,10 +5,11 @@ use serde_wasm_bindgen::from_value;
 use super::engine;
 use super::red_hat_boy as rhb;
 use super::sheet;
+use super::walk;
 
 pub enum WalkTheDog {
   Loading,
-  Loaded(rhb::RedHatBoy),
+  Loaded(walk::Walk),
 }
 
 impl WalkTheDog {
@@ -22,47 +23,52 @@ impl engine::Game for WalkTheDog {
   async fn initialize(&self) -> Result<Box<dyn engine::Game>, Error> {
     match self {
       WalkTheDog::Loading => {
-        let image = engine::load_image("static/images/rhb.png").await?;
+        let player = engine::load_image("static/images/rhb.png").await?;
+        let background = engine::load_image("static/images/BG.png").await?;
         let values = engine::fetch_json("static/coordinates/rhb.json").await?;
         let sheet = from_value::<sheet::Sheet>(values).map_err(|e| anyhow!(""))?;
         let rhb = rhb::RedHatBoy::new(
           sheet.clone(),
-          image.clone(),
+          player.clone(),
           0,
           engine::Point { x: 0, y: 350 },
           engine::Point { x: 0, y: 0 },
         );
-        Ok(Box::new(WalkTheDog::Loaded(rhb)))
+        Ok(Box::new(WalkTheDog::Loaded(walk::Walk {
+          boy: rhb,
+          background: engine::Image::new(background, engine::Point { x: 0, y: 0 }),
+        })))
       }
       WalkTheDog::Loaded(_) => Err(anyhow!("")),
     }
   }
 
   fn update(&mut self, key_state: &engine::KeyState) {
-    if let WalkTheDog::Loaded(rhb) = self {
+    if let WalkTheDog::Loaded(walk) = self {
       let mut velocity = engine::Point { x: 0, y: 0 };
       if key_state.is_pressed("ArrowUp") {
         velocity.y -= 3;
       }
       if key_state.is_pressed("ArrowDown") {
-        rhb.slide();
+        walk.boy.slide();
       }
       if key_state.is_pressed("ArrowRight") {
-        rhb.run_right();
+        walk.boy.run_right();
       }
       if key_state.is_pressed("ArrowLeft") {
-        rhb.stop();
+        walk.boy.stop();
       }
       if key_state.is_pressed("Space") {
-        rhb.jump();
+        walk.boy.jump();
       }
-      rhb.update();
+      walk.boy.update();
     }
   }
 
   fn draw(&self, renderer: &engine::Renderer) {
-    if let WalkTheDog::Loaded(rhb) = self {
-      rhb.draw(renderer);
+    if let WalkTheDog::Loaded(walk) = self {
+      let _ = walk.background.draw(renderer);
+      walk.boy.draw(renderer);
     }
   }
 }

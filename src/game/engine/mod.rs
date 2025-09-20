@@ -10,8 +10,10 @@ mod loader;
 pub use loader::load_image;
 
 mod engine_loop;
+mod image;
 mod key_state;
 mod renderer;
+pub use image::Image;
 
 #[derive(Copy, Clone)]
 pub struct Rect {
