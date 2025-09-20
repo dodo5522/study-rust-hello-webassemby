@@ -1,0 +1,66 @@
+name: Build WASM
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  RUST_VERSION: 1.86.0
+  TRUNK_VERSION: 0.21.13
+  CACHE_TIER: ${{ (github.ref_name == 'main' || startsWith(github.ref, 'refs/tags/')) && 'prd' || 'dev' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          targets: wasm32-unknown-unknown
+      - name: Cache rust dependencies and tools
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: .
+          shared-key: ${{ env.CACHE_TIER }}
+          cache-on-failure: true
+      - name: Install trunk & wasm-bindgen-cli
+        uses: taiki-e/install-action@v2
+        with:
+          tool: trunk@${{ env.TRUNK_VERSION }}
+      - name: Build
+        run: |
+          trunk build --release --public-url /rhb
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: dist
+          if-no-files-found: error
+
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: dist
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ vars.AWS_ROLE }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Sync to S3
+        run: |
+          aws s3 sync dist s3://${{ secrets.AWS_S3_BUCKET }}/rhb --delete --only-show-errors
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} \
+            --paths "/*"
