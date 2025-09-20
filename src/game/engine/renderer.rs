@@ -1,7 +1,7 @@
 use anyhow::{Error, anyhow};
 use web_sys::{CanvasRenderingContext2d, HtmlImageElement};
 
-use crate::game::engine::{Rect, Renderer};
+use super::{Point, Rect, Renderer};
 
 impl Renderer {
   pub fn new(context: CanvasRenderingContext2d) -> Self {
@@ -36,6 +36,13 @@ impl Renderer {
         destination.width.into(),
         destination.height.into(),
       )
+      .map_err(|e| anyhow!("Error drawing {:#?} {:#?}", image, e))
+  }
+
+  pub fn draw_entire_image(&self, image: &HtmlImageElement, position: &Point) -> Result<(), Error> {
+    self
+      .context
+      .draw_image_with_html_image_element(image, position.x.into(), position.y.into())
       .map_err(|e| anyhow!("Error drawing {:#?} {:#?}", image, e))
   }
 }

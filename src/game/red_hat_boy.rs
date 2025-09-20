@@ -41,12 +41,12 @@ impl RedHatBoy {
       .get(&frame_name)
       .expect(format!("{} not found", frame_name).as_str());
 
-    renderer.clear(engine::Rect {
-      x: 0.0,
-      y: 0.0,
-      width: 500.0,
-      height: 500.0,
-    });
+    // renderer.clear(engine::Rect {
+    //   x: 0.0,
+    //   y: 0.0,
+    //   width: 500.0,
+    //   height: 500.0,
+    // });
     renderer
       .draw_image(
         &self.image,
