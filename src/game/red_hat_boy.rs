@@ -53,8 +53,8 @@ impl RedHatBoy {
           height: cell.frame.h as f32,
         },
         &engine::Rect {
-          x: self.state_machine.context().position().x.into(),
-          y: self.state_machine.context().position().y.into(),
+          x: (self.state_machine.context().position().x + cell.sprite_source_size.x as i16).into(),
+          y: (self.state_machine.context().position().y + cell.sprite_source_size.y as i16).into(),
           width: cell.frame.w as f32,
           height: cell.frame.h as f32,
         },
@@ -64,8 +64,8 @@ impl RedHatBoy {
     #[cfg(feature = "bounding-boxes")]
     renderer
       .draw_rect(&engine::Rect {
-        x: self.state_machine.context().position().x.into(),
-        y: self.state_machine.context().position().y.into(),
+        x: (self.state_machine.context().position().x + cell.sprite_source_size.x as i16).into(),
+        y: (self.state_machine.context().position().y + cell.sprite_source_size.y as i16).into(),
         width: cell.frame.w as f32,
         height: cell.frame.h as f32,
       })
