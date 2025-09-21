@@ -18,7 +18,7 @@ impl RedHatBoyContext {
     canvas_size: engine::Size,
   ) -> Self {
     RedHatBoyContext {
-      ground: canvas_size.height as i16 - 136,
+      ground: canvas_size.height as i16 - 120,
       frame,
       position,
       velocity,

@@ -25,6 +25,7 @@ impl engine::Game for WalkTheDog {
       WalkTheDog::Loading => {
         let player = engine::load_image("static/images/rhb.png").await?;
         let background = engine::load_image("static/images/BG.png").await?;
+        let stone = engine::load_image("static/images/Stone.png").await?;
         let canvas_size = engine::get_canvas_size()?;
         let values = engine::fetch_json("static/coordinates/rhb.json").await?;
         let sheet = from_value::<sheet::Sheet>(values).map_err(|e| anyhow!(""))?;
@@ -34,7 +35,7 @@ impl engine::Game for WalkTheDog {
           0,
           engine::Point {
             x: 0,
-            y: canvas_size.height as i16 - 136,
+            y: canvas_size.height as i16 - 120,
           },
           engine::Point { x: 0, y: 0 },
           canvas_size,
@@ -42,6 +43,7 @@ impl engine::Game for WalkTheDog {
         Ok(Box::new(WalkTheDog::Loaded(walk::Walk {
           boy: rhb,
           background: engine::Image::new(background, engine::Point { x: 0, y: 0 }),
+          stone: engine::Image::new(stone, engine::Point { x: 150, y: 546 }),
         })))
       }
       WalkTheDog::Loaded(_) => Err(anyhow!("")),
@@ -74,6 +76,7 @@ impl engine::Game for WalkTheDog {
     if let WalkTheDog::Loaded(walk) = self {
       let _ = walk.background.draw(renderer);
       walk.boy.draw(renderer);
+      let _ = walk.stone.draw(renderer);
     }
   }
 }
