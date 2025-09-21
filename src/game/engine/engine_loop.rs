@@ -5,12 +5,14 @@ use std::rc::Rc;
 use wasm_bindgen::JsCast;
 use web_sys::KeyboardEvent;
 
-use crate::game::engine::browser;
-use crate::game::engine::{EngineLoop, Game, KeyPress, KeyState, Renderer};
+use super::browser;
+use super::{EngineLoop, Game, KeyPress, KeyState, Renderer, Size};
 
 type SharedLoopClosure = Rc<RefCell<Option<browser::LoopClosure>>>;
 
 const FRAME_GAP_MS: f32 = 1.0 / 60.0 * 1000.0;
+const CANVAS_ID: &str = "canvas";
+const CANVAS_DIMENSION: &str = "2d";
 
 impl EngineLoop {
   pub async fn start(game: impl Game + 'static) -> Result<(), Error> {
@@ -20,7 +22,7 @@ impl EngineLoop {
       last_frame: browser::now()?,
       accumulated_delta: 0.0,
     };
-    let renderer = Renderer::new(browser::canvas("canvas", "2d")?);
+    let renderer = Renderer::new(browser::canvas(CANVAS_ID, CANVAS_DIMENSION)?);
     let f: SharedLoopClosure = Rc::new(RefCell::new(None));
     let g = f.clone();
     let mut state = KeyState::new();
@@ -86,4 +88,15 @@ fn process_input(state: &mut KeyState, key_receiver: &mut UnboundedReceiver<KeyP
       _ => break,
     }
   }
+}
+
+pub fn get_canvas_size() -> Result<Size, Error> {
+  let canvas = browser::canvas(CANVAS_ID, CANVAS_DIMENSION)?
+    .canvas()
+    .expect("Cannot get canvas width");
+
+  Ok(Size {
+    width: canvas.width(),
+    height: canvas.height(),
+  })
 }

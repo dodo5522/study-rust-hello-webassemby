@@ -25,14 +25,19 @@ impl engine::Game for WalkTheDog {
       WalkTheDog::Loading => {
         let player = engine::load_image("static/images/rhb.png").await?;
         let background = engine::load_image("static/images/BG.png").await?;
+        let canvas_size = engine::get_canvas_size()?;
         let values = engine::fetch_json("static/coordinates/rhb.json").await?;
         let sheet = from_value::<sheet::Sheet>(values).map_err(|e| anyhow!(""))?;
         let rhb = rhb::RedHatBoy::new(
           sheet.clone(),
           player.clone(),
           0,
-          engine::Point { x: 0, y: 350 },
+          engine::Point {
+            x: 0,
+            y: canvas_size.height as i16 - 136,
+          },
           engine::Point { x: 0, y: 0 },
+          canvas_size,
         );
         Ok(Box::new(WalkTheDog::Loaded(walk::Walk {
           boy: rhb,

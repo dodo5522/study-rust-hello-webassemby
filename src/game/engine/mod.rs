@@ -10,6 +10,7 @@ mod loader;
 pub use loader::load_image;
 
 mod engine_loop;
+pub use engine_loop::*;
 mod image;
 mod key_state;
 mod renderer;
@@ -27,6 +28,12 @@ pub struct Rect {
 pub struct Point {
   pub x: i16,
   pub y: i16,
+}
+
+#[derive(Copy, Clone)]
+pub struct Size {
+  pub width: u32,
+  pub height: u32,
 }
 
 pub struct Renderer {

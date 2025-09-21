@@ -16,9 +16,15 @@ impl RedHatBoyState<Idle> {
     initial_frame: u8,
     initial_position: engine::Point,
     initial_velocity: engine::Point,
+    canvas_size: engine::Size,
   ) -> Self {
     Self {
-      context: RedHatBoyContext::new(initial_frame, initial_position, initial_velocity),
+      context: RedHatBoyContext::new(
+        initial_frame,
+        initial_position,
+        initial_velocity,
+        canvas_size,
+      ),
       _state: Idle {},
     }
   }
