@@ -9,12 +9,16 @@ pub struct RedHatBoyContext {
 }
 
 impl RedHatBoyContext {
-  const FLOOR: i16 = 350;
   const GRAVITY: i16 = 1;
 
-  pub fn new(frame: u8, position: engine::Point, velocity: engine::Point) -> Self {
+  pub fn new(
+    frame: u8,
+    position: engine::Point,
+    velocity: engine::Point,
+    canvas_size: engine::Size,
+  ) -> Self {
     RedHatBoyContext {
-      ground: Self::FLOOR,
+      ground: canvas_size.height as i16 - 136,
       frame,
       position,
       velocity,

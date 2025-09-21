@@ -17,12 +17,14 @@ impl RedHatBoy {
     initial_frame: u8,
     initial_position: engine::Point,
     initial_velocity: engine::Point,
+    canvas_size: engine::Size,
   ) -> Self {
     Self {
       state_machine: state_m::RedHatBoyStateMachine::Idle(state_m::RedHatBoyStateIdle::new(
         initial_frame,
         initial_position,
         initial_velocity,
+        canvas_size,
       )),
       sheet,
       image,
@@ -41,12 +43,6 @@ impl RedHatBoy {
       .get(&frame_name)
       .expect(format!("{} not found", frame_name).as_str());
 
-    // renderer.clear(engine::Rect {
-    //   x: 0.0,
-    //   y: 0.0,
-    //   width: 500.0,
-    //   height: 500.0,
-    // });
     renderer
       .draw_image(
         &self.image,
