@@ -60,6 +60,16 @@ impl RedHatBoy {
         },
       )
       .expect("Failed to draw image");
+
+    #[cfg(feature = "bounding-boxes")]
+    renderer
+      .draw_rect(&engine::Rect {
+        x: self.state_machine.context().position().x.into(),
+        y: self.state_machine.context().position().y.into(),
+        width: cell.frame.w as f32,
+        height: cell.frame.h as f32,
+      })
+      .expect("")
   }
 
   pub fn update(&mut self) {

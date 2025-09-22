@@ -45,4 +45,18 @@ impl Renderer {
       .draw_image_with_html_image_element(image, position.x.into(), position.y.into())
       .map_err(|e| anyhow!("Error drawing {:#?} {:#?}", image, e))
   }
+
+  pub fn draw_rect(&self, rect: &Rect) -> Result<(), Error> {
+    self.context.begin_path();
+    self.context.set_line_width(1.0);
+    self.context.set_stroke_style_str("red");
+    self.context.rect(
+      rect.x.into(),
+      rect.y.into(),
+      rect.width.into(),
+      rect.height.into(),
+    );
+    self.context.stroke();
+    Ok(())
+  }
 }
