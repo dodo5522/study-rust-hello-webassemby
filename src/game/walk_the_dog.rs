@@ -52,6 +52,9 @@ impl engine::Game for WalkTheDog {
 
   fn update(&mut self, key_state: &engine::KeyState) {
     if let WalkTheDog::Loaded(walk) = self {
+      if walk.boy.bounding_box().intersect(walk.stone.bounding_box()) {
+        log::info!("collision")
+      }
       let mut velocity = engine::Point { x: 0, y: 0 };
       if key_state.is_pressed("ArrowUp") {
         velocity.y -= 3;
