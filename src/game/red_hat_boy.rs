@@ -1,8 +1,7 @@
-use web_sys::HtmlImageElement;
-
 use super::engine;
 use super::sheet;
 use super::state_machine as state_m;
+use web_sys::HtmlImageElement;
 
 pub struct RedHatBoy {
   state_machine: state_m::RedHatBoyStateMachine,
@@ -32,16 +31,8 @@ impl RedHatBoy {
   }
 
   pub fn draw(&self, renderer: &engine::Renderer) {
-    let frame_name = format!(
-      "{} ({}).png",
-      self.state_machine.frame_name(),
-      self.state_machine.context().frame() / 3 + 1,
-    );
-    let cell = self
-      .sheet
-      .frames
-      .get(&frame_name)
-      .expect(format!("{} not found", frame_name).as_str());
+    let cell = self.current_sprite().expect("Frame not found");
+    let bounding_box = self.bounding_box(&cell);
 
     renderer
       .draw_image(
@@ -52,24 +43,14 @@ impl RedHatBoy {
           width: cell.frame.w as f32,
           height: cell.frame.h as f32,
         },
-        &engine::Rect {
-          x: (self.state_machine.context().position().x + cell.sprite_source_size.x as i16).into(),
-          y: (self.state_machine.context().position().y + cell.sprite_source_size.y as i16).into(),
-          width: cell.frame.w as f32,
-          height: cell.frame.h as f32,
-        },
+        &bounding_box,
       )
       .expect("Failed to draw image");
 
     #[cfg(feature = "bounding-boxes")]
     renderer
-      .draw_rect(&engine::Rect {
-        x: (self.state_machine.context().position().x + cell.sprite_source_size.x as i16).into(),
-        y: (self.state_machine.context().position().y + cell.sprite_source_size.y as i16).into(),
-        width: cell.frame.w as f32,
-        height: cell.frame.h as f32,
-      })
-      .expect("")
+      .draw_rect(&bounding_box)
+      .expect("Cannot render bounding box")
   }
 
   pub fn update(&mut self) {
@@ -90,5 +71,26 @@ impl RedHatBoy {
 
   pub fn jump(&mut self) {
     self.state_machine = self.state_machine.transition(state_m::Event::Jump);
+  }
+
+  fn frame_name(&self) -> String {
+    format!(
+      "{} ({}).png",
+      self.state_machine.frame_name(),
+      self.state_machine.context().frame() / 3 + 1,
+    )
+  }
+
+  fn current_sprite(&self) -> Option<&sheet::SheetCell> {
+    self.sheet.frames.get(&self.frame_name())
+  }
+
+  fn bounding_box(&self, cell: &sheet::SheetCell) -> engine::Rect {
+    engine::Rect {
+      x: (self.state_machine.context().position().x + cell.sprite_source_size.x as i16).into(),
+      y: (self.state_machine.context().position().y + cell.sprite_source_size.y as i16).into(),
+      width: cell.frame.w as f32,
+      height: cell.frame.h as f32,
+    }
   }
 }

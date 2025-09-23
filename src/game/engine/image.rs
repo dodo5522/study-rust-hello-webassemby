@@ -5,11 +5,22 @@ use web_sys::HtmlImageElement;
 pub struct Image {
   image: HtmlImageElement,
   position: Point,
+  bounding_box: Rect,
 }
 
 impl Image {
   pub fn new(image: HtmlImageElement, position: Point) -> Self {
-    Self { image, position }
+    let bounding_box = Rect {
+      x: position.x.into(),
+      y: position.y.into(),
+      width: image.width() as f32,
+      height: image.height() as f32,
+    };
+    Self {
+      image,
+      position,
+      bounding_box,
+    }
   }
 
   pub fn draw(&self, renderer: &Renderer) -> Result<(), Error> {
@@ -24,5 +35,9 @@ impl Image {
     });
 
     Ok(())
+  }
+
+  pub fn bounding_box(&self) -> Rect {
+    self.bounding_box
   }
 }
