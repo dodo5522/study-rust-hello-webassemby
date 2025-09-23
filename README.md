@@ -22,10 +22,10 @@
 
 # How to run
 
-4. Run it.
+1. Run it with debug feature.
 
    ```bash
-   trunk serve
+   trunk serve --features "debug"
    ```
 
 # How to release
