@@ -2,16 +2,18 @@ use super::RedHatBoyContext;
 use super::state::{
   Falling, Idle, JumpingInIdle, JumpingInRunning, KnockedOut, RedHatBoyState, Running, Sliding,
 };
-use super::state::{JumpingInIdleEndState, JumpingInRunningEndState, SlidingEndState};
+use super::state::{
+  FallingEndState, JumpingInIdleEndState, JumpingInRunningEndState, SlidingEndState,
+};
 
 #[derive(Copy, Clone)]
 pub enum RedHatBoyStateMachine {
+  Falling(RedHatBoyState<Falling>),
   Idle(RedHatBoyState<Idle>),
   Running(RedHatBoyState<Running>),
   JumpingInIdle(RedHatBoyState<JumpingInIdle>),
   JumpingInRunning(RedHatBoyState<JumpingInRunning>),
   Sliding(RedHatBoyState<Sliding>),
-  Falling(RedHatBoyState<Falling>),
   KnockedOut(RedHatBoyState<KnockedOut>),
 }
 
@@ -19,7 +21,7 @@ pub enum Event {
   Run,
   Jump,
   Slide,
-  Crash,
+  KnockOut,
   Stop,
   Update,
 }
@@ -27,6 +29,7 @@ pub enum Event {
 impl RedHatBoyStateMachine {
   pub fn transition(self, event: Event) -> Self {
     match (&self, event) {
+      (RedHatBoyStateMachine::Falling(state), Event::Update) => state.update().into(),
       (RedHatBoyStateMachine::Idle(state), Event::Jump) => state.jump().into(),
       (RedHatBoyStateMachine::Idle(state), Event::Run) => state.run().into(),
       (RedHatBoyStateMachine::Idle(state), Event::Update) => state.update().into(),
@@ -34,9 +37,13 @@ impl RedHatBoyStateMachine {
       (RedHatBoyStateMachine::Running(state), Event::Stop) => state.stand().into(),
       (RedHatBoyStateMachine::Running(state), Event::Update) => state.update().into(),
       (RedHatBoyStateMachine::Running(state), Event::Jump) => state.jump().into(),
+      (RedHatBoyStateMachine::Running(state), Event::KnockOut) => state.knock_out().into(),
       (RedHatBoyStateMachine::JumpingInIdle(state), Event::Update) => state.update().into(),
       (RedHatBoyStateMachine::JumpingInRunning(state), Event::Update) => state.update().into(),
+      (RedHatBoyStateMachine::JumpingInRunning(state), Event::KnockOut) => state.knock_out().into(),
+      (RedHatBoyStateMachine::KnockedOut(state), Event::Update) => state.update().into(),
       (RedHatBoyStateMachine::Sliding(state), Event::Update) => state.update().into(),
+      (RedHatBoyStateMachine::Sliding(state), Event::KnockOut) => state.knock_out().into(),
       _ => self,
     }
   }
@@ -65,8 +72,23 @@ impl RedHatBoyStateMachine {
     }
   }
 
-  pub fn update(mut self) -> Self {
+  pub fn update(self) -> Self {
     self.transition(Event::Update)
+  }
+}
+
+impl From<RedHatBoyState<Falling>> for RedHatBoyStateMachine {
+  fn from(state: RedHatBoyState<Falling>) -> Self {
+    RedHatBoyStateMachine::Falling(state)
+  }
+}
+
+impl From<FallingEndState> for RedHatBoyStateMachine {
+  fn from(end_state: FallingEndState) -> Self {
+    match end_state {
+      FallingEndState::Falling(state) => state.into(),
+      FallingEndState::Complete(state) => state.into(),
+    }
   }
 }
 
@@ -127,8 +149,8 @@ impl From<SlidingEndState> for RedHatBoyStateMachine {
   }
 }
 
-impl From<RedHatBoyState<Falling>> for RedHatBoyStateMachine {
-  fn from(state: RedHatBoyState<Falling>) -> Self {
-    RedHatBoyStateMachine::Falling(state)
+impl From<RedHatBoyState<KnockedOut>> for RedHatBoyStateMachine {
+  fn from(state: RedHatBoyState<KnockedOut>) -> Self {
+    RedHatBoyStateMachine::KnockedOut(state)
   }
 }

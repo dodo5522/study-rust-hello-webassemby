@@ -73,6 +73,10 @@ impl RedHatBoy {
     self.state_machine = self.state_machine.transition(state_m::Event::Jump);
   }
 
+  pub fn knock_out(&mut self) {
+    self.state_machine = self.state_machine.transition(state_m::Event::KnockOut);
+  }
+
   fn frame_name(&self) -> String {
     format!(
       "{} ({}).png",
@@ -85,6 +89,10 @@ impl RedHatBoy {
     self.sheet.frames.get(&self.frame_name())
   }
 
+  /// Get Rect of the bounding box on the current sprite.
+  ///
+  /// # Returns
+  /// Rect of the bounding box
   pub fn bounding_box(&self) -> engine::Rect {
     let cell = self.current_sprite().expect("Frame not found");
     engine::Rect {

@@ -1,20 +1,19 @@
 use super::context::RedHatBoyContext;
 
 mod falling;
-pub use falling::Falling;
+pub use falling::*;
 mod idle;
-pub use idle::{Idle, RedHatBoyStateIdle};
+pub use idle::*;
 mod jumping_in_idle;
-pub use jumping_in_idle::{JumpingInIdle, JumpingInIdleEndState};
+pub use jumping_in_idle::*;
 mod jumping_in_running;
-pub use jumping_in_running::{JumpingInRunning, JumpingInRunningEndState};
+pub use jumping_in_running::*;
 mod knocked_out;
-pub use knocked_out::KnockedOut;
+pub use knocked_out::*;
 mod running;
-pub use running::Running;
+pub use running::*;
 mod sliding;
-pub use sliding::Sliding;
-pub use sliding::SlidingEndState;
+pub use sliding::*;
 
 #[derive(Copy, Clone)]
 pub struct RedHatBoyState<S> {

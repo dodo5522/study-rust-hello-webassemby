@@ -28,7 +28,7 @@ impl engine::Game for WalkTheDog {
         let stone = engine::load_image("static/images/Stone.png").await?;
         let canvas_size = engine::get_canvas_size()?;
         let values = engine::fetch_json("static/coordinates/rhb.json").await?;
-        let sheet = from_value::<sheet::Sheet>(values).map_err(|e| anyhow!(""))?;
+        let sheet = from_value::<sheet::Sheet>(values).map_err(|e| anyhow!("{}", e))?;
         let rhb = rhb::RedHatBoy::new(
           sheet.clone(),
           player.clone(),
@@ -53,23 +53,24 @@ impl engine::Game for WalkTheDog {
   fn update(&mut self, key_state: &engine::KeyState) {
     if let WalkTheDog::Loaded(walk) = self {
       if walk.boy.bounding_box().intersect(walk.stone.bounding_box()) {
-        log::info!("collision")
-      }
-      let mut velocity = engine::Point { x: 0, y: 0 };
-      if key_state.is_pressed("ArrowUp") {
-        velocity.y -= 3;
-      }
-      if key_state.is_pressed("ArrowDown") {
-        walk.boy.slide();
-      }
-      if key_state.is_pressed("ArrowRight") {
-        walk.boy.run_right();
-      }
-      if key_state.is_pressed("ArrowLeft") {
-        walk.boy.stop();
-      }
-      if key_state.is_pressed("Space") {
-        walk.boy.jump();
+        walk.boy.knock_out();
+      } else {
+        let mut velocity = engine::Point { x: 0, y: 0 };
+        if key_state.is_pressed("ArrowUp") {
+          velocity.y -= 3;
+        }
+        if key_state.is_pressed("ArrowDown") {
+          walk.boy.slide();
+        }
+        if key_state.is_pressed("ArrowRight") {
+          walk.boy.run_right();
+        }
+        if key_state.is_pressed("ArrowLeft") {
+          walk.boy.stop();
+        }
+        if key_state.is_pressed("Space") {
+          walk.boy.jump();
+        }
       }
       walk.boy.update();
     }

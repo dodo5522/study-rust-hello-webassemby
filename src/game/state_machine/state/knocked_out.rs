@@ -8,8 +8,7 @@ impl RedHatBoyState<KnockedOut> {
     "Dead"
   }
 
-  pub fn update(mut self) -> Self {
-    self.context = self.context.update(1);
+  pub fn update(self) -> Self {
     self
   }
 }

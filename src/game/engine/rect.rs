@@ -19,11 +19,8 @@ impl Rect {
   /// Detect collision with another Rect object.
   ///
   /// # Arguments
-  ///
   /// * `other` - Another Rect object
-  ///
   /// # Returns
-  ///
   /// Collision detected if true
   pub fn intersect(&self, other: Rect) -> bool {
     self.x < (other.x + other.width)
