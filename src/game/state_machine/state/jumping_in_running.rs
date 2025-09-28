@@ -1,5 +1,4 @@
-use super::RedHatBoyState;
-use super::Running;
+use super::{Falling, RedHatBoyState, Running};
 
 #[derive(Copy, Clone)]
 pub struct JumpingInRunning;
@@ -32,6 +31,13 @@ impl RedHatBoyState<JumpingInRunning> {
     RedHatBoyState {
       context: self.context.reset_frame(),
       _state: Running {},
+    }
+  }
+
+  pub fn knock_out(&self) -> RedHatBoyState<Falling> {
+    RedHatBoyState {
+      context: self.context.reset_frame().stop(),
+      _state: Falling {},
     }
   }
 }

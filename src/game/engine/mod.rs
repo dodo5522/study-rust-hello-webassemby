@@ -13,16 +13,11 @@ mod engine_loop;
 pub use engine_loop::*;
 mod image;
 mod key_state;
+mod rect;
 mod renderer;
-pub use image::Image;
+pub use rect::*;
 
-#[derive(Copy, Clone)]
-pub struct Rect {
-  pub x: f32,
-  pub y: f32,
-  pub width: f32,
-  pub height: f32,
-}
+pub use image::Image;
 
 #[derive(Copy, Clone)]
 pub struct Point {

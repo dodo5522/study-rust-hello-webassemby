@@ -35,17 +35,17 @@ impl RedHatBoyState<Running> {
     }
   }
 
-  pub fn crash(self) -> RedHatBoyState<Falling> {
-    RedHatBoyState {
-      context: self.context,
-      _state: Falling {},
-    }
-  }
-
   pub fn stand(self) -> RedHatBoyState<Idle> {
     RedHatBoyState {
       context: self.context.stop(),
       _state: Idle {},
+    }
+  }
+
+  pub fn knock_out(&self) -> RedHatBoyState<Falling> {
+    RedHatBoyState {
+      context: self.context.reset_frame().stop(),
+      _state: Falling,
     }
   }
 }
