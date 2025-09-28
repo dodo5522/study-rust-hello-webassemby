@@ -43,7 +43,7 @@ impl engine::Game for WalkTheDog {
         Ok(Box::new(WalkTheDog::Loaded(walk::Walk {
           boy: rhb,
           background: engine::Image::new(background, engine::Point { x: 0, y: 0 }),
-          stone: engine::Image::new(stone, engine::Point { x: 150, y: 546 }),
+          stone: engine::Image::new(stone, engine::Point { x: 300, y: 546 }),
         })))
       }
       WalkTheDog::Loaded(_) => Err(anyhow!("")),
