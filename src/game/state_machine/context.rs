@@ -59,8 +59,13 @@ impl RedHatBoyContext {
     self
   }
 
+  pub fn force_frame(mut self, frame: u8) -> Self {
+    self.frame = frame;
+    self
+  }
+
   pub fn run_right(mut self) -> Self {
-    self.velocity.x += 3;
+    self.velocity.x += 6;
     self
   }
 
