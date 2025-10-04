@@ -1,7 +1,11 @@
 use anyhow::{Error, anyhow};
 use web_sys::{CanvasRenderingContext2d, HtmlImageElement};
 
-use super::{Point, Rect, Renderer};
+use super::{Point, Rect};
+
+pub struct Renderer {
+  context: CanvasRenderingContext2d,
+}
 
 impl Renderer {
   pub fn new(context: CanvasRenderingContext2d) -> Self {

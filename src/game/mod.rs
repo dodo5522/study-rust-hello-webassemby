@@ -2,6 +2,7 @@ mod engine;
 pub type GameLoop = engine::EngineLoop;
 pub use engine::spawn_local;
 
+mod platform;
 mod red_hat_boy;
 
 mod sheet;

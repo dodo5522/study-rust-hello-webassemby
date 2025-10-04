@@ -1,7 +1,7 @@
 use anyhow::Error;
 use async_trait::async_trait;
 use std::collections::HashMap;
-use web_sys::{CanvasRenderingContext2d, KeyboardEvent};
+use web_sys::KeyboardEvent;
 
 mod browser;
 pub use browser::{fetch_json, spawn_local};
@@ -14,8 +14,9 @@ pub use engine_loop::*;
 mod image;
 mod key_state;
 mod rect;
-mod renderer;
 pub use rect::*;
+mod renderer;
+pub use renderer::*;
 
 pub use image::Image;
 
@@ -29,10 +30,6 @@ pub struct Point {
 pub struct Size {
   pub width: u32,
   pub height: u32,
-}
-
-pub struct Renderer {
-  context: CanvasRenderingContext2d,
 }
 
 enum KeyPress {

@@ -3,6 +3,7 @@ use async_trait::async_trait;
 use serde_wasm_bindgen::from_value;
 
 use super::engine;
+use super::platform::Platform;
 use super::red_hat_boy as rhb;
 use super::sheet;
 use super::walk;
@@ -26,11 +27,15 @@ impl engine::Game for WalkTheDog {
         let player = engine::load_image("static/images/rhb.png").await?;
         let background = engine::load_image("static/images/BG.png").await?;
         let stone = engine::load_image("static/images/Stone.png").await?;
+        let platform = engine::load_image("static/images/tiles.png").await?;
         let canvas_size = engine::get_canvas_size()?;
-        let values = engine::fetch_json("static/coordinates/rhb.json").await?;
-        let sheet = from_value::<sheet::Sheet>(values).map_err(|e| anyhow!("{}", e))?;
+        let platform_coords = engine::fetch_json("static/coordinates/tiles.json").await?;
+        let platform_sheet =
+          from_value::<sheet::Sheet>(platform_coords).map_err(|e| anyhow!("{}", e))?;
+        let rhb_coords = engine::fetch_json("static/coordinates/rhb.json").await?;
+        let rhb_sheet = from_value::<sheet::Sheet>(rhb_coords).map_err(|e| anyhow!("{}", e))?;
         let rhb = rhb::RedHatBoy::new(
-          sheet.clone(),
+          rhb_sheet.clone(),
           player.clone(),
           0,
           engine::Point {
@@ -44,6 +49,7 @@ impl engine::Game for WalkTheDog {
           boy: rhb,
           background: engine::Image::new(background, engine::Point { x: 0, y: 0 }),
           stone: engine::Image::new(stone, engine::Point { x: 300, y: 546 }),
+          platform: Platform::new(platform_sheet, platform, engine::Point { x: 200, y: 400 }),
         })))
       }
       WalkTheDog::Loaded(_) => Err(anyhow!("")),
@@ -81,6 +87,7 @@ impl engine::Game for WalkTheDog {
       let _ = walk.background.draw(renderer);
       walk.boy.draw(renderer);
       let _ = walk.stone.draw(renderer);
+      walk.platform.draw(renderer);
     }
   }
 }
