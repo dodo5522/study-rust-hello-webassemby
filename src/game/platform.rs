@@ -9,6 +9,8 @@ pub struct Platform {
 }
 
 impl Platform {
+  const PNG_FILE_NAME: &'static str = "13.png";
+
   /// Create a new platform.
   ///
   /// # Arguments
@@ -28,10 +30,14 @@ impl Platform {
   /// # Returns
   /// Rect of the bounding box
   pub fn bounding_box(&self) -> engine::Rect {
-    let sheet = self.sheet.frames.get("13.png").expect("Frame not found");
+    let sheet = self
+      .sheet
+      .frames
+      .get(Self::PNG_FILE_NAME)
+      .expect("Frame not found");
     engine::Rect {
-      x: sheet.frame.x as f32,
-      y: sheet.frame.y as f32,
+      x: self.position.x as f32,
+      y: self.position.y as f32,
       width: (sheet.frame.w * 3) as f32,
       height: sheet.frame.h as f32,
     }
@@ -42,7 +48,11 @@ impl Platform {
   /// # Arguments
   /// * `renderer` - The renderer to draw the platform on.
   pub fn draw(&self, renderer: &engine::Renderer) {
-    let sheet = self.sheet.frames.get("13.png").expect("Frame not found");
+    let sheet = self
+      .sheet
+      .frames
+      .get(Self::PNG_FILE_NAME)
+      .expect("Frame not found");
     renderer
       .draw_image(
         &self.image,
@@ -60,5 +70,10 @@ impl Platform {
         },
       )
       .expect("Failed to draw image");
+
+    #[cfg(feature = "bounding-boxes")]
+    renderer
+      .draw_rect(&(self.bounding_box()))
+      .expect("Cannot render bounding box");
   }
 }
