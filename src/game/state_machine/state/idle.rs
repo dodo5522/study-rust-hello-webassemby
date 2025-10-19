@@ -1,14 +1,15 @@
 use super::super::engine;
-use super::{JumpingInIdle, RedHatBoyContext, RedHatBoyState, Running};
+use super::{BaseStateStruct, JumpingInIdle, RedHatBoyContext, RedHatBoyState, Running};
 
 #[derive(Copy, Clone)]
 pub struct Idle;
 
 pub type RedHatBoyStateIdle = RedHatBoyState<Idle>;
 
-impl Idle {
-  pub const FRAMES: u8 = 29;
+impl BaseStateStruct for Idle {
   const SPEED_JUMP: i16 = -15;
+  const FRAMES: u8 = 29;
+  const FRAME_NAME: &'static str = "Idle";
 }
 
 impl RedHatBoyState<Idle> {
@@ -27,10 +28,6 @@ impl RedHatBoyState<Idle> {
       ),
       _state: Idle {},
     }
-  }
-
-  pub fn frame_name(&self) -> &str {
-    "Idle"
   }
 
   pub fn update(mut self) -> Self {
