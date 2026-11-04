@@ -1,18 +1,15 @@
-use super::{Falling, Idle, JumpingInRunning, RedHatBoyState, Sliding};
+use super::{BaseStateStruct, Falling, Idle, JumpingInRunning, RedHatBoyState, Sliding};
 
 #[derive(Copy, Clone)]
 pub struct Running;
 
-impl Running {
-  const FRAMES: u8 = 23;
+impl BaseStateStruct for Running {
   const SPEED_JUMP: i16 = -20;
+  const FRAMES: u8 = 23;
+  const FRAME_NAME: &'static str = "Run";
 }
 
 impl RedHatBoyState<Running> {
-  pub fn frame_name(&self) -> &str {
-    "Run"
-  }
-
   pub fn update(mut self) -> Self {
     self.context = self.context.update(Running::FRAMES);
     self

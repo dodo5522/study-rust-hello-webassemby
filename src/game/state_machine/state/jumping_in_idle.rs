@@ -1,5 +1,4 @@
-use super::Idle;
-use super::RedHatBoyState;
+use super::{BaseStateStruct, Idle, RedHatBoyState};
 
 #[derive(Copy, Clone)]
 pub struct JumpingInIdle;
@@ -9,15 +8,13 @@ pub enum JumpingInIdleEndState {
   Complete(RedHatBoyState<Idle>),
 }
 
-impl JumpingInIdle {
+impl BaseStateStruct for JumpingInIdle {
+  const SPEED_JUMP: i16 = 0;
   const FRAMES: u8 = 35;
+  const FRAME_NAME: &'static str = "Jump";
 }
 
 impl RedHatBoyState<JumpingInIdle> {
-  pub fn frame_name(&self) -> &str {
-    "Jump"
-  }
-
   pub fn update(mut self) -> JumpingInIdleEndState {
     self.context = self.context.update(JumpingInIdle::FRAMES);
 

@@ -1,4 +1,4 @@
-use super::{Falling, RedHatBoyState, Running};
+use super::{BaseStateStruct, Falling, RedHatBoyState, Running};
 
 #[derive(Copy, Clone)]
 pub struct JumpingInRunning;
@@ -8,15 +8,13 @@ pub enum JumpingInRunningEndState {
   Complete(RedHatBoyState<Running>),
 }
 
-impl JumpingInRunning {
+impl BaseStateStruct for JumpingInRunning {
+  const SPEED_JUMP: i16 = 0;
   const FRAMES: u8 = 35;
+  const FRAME_NAME: &'static str = "Jump";
 }
 
 impl RedHatBoyState<JumpingInRunning> {
-  pub fn frame_name(&self) -> &str {
-    "Jump"
-  }
-
   pub fn update(mut self) -> JumpingInRunningEndState {
     self.context = self.context.update(JumpingInRunning::FRAMES);
 

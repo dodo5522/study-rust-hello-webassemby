@@ -15,14 +15,28 @@ pub use running::*;
 mod sliding;
 pub use sliding::*;
 
+trait BaseStateStruct {
+  const SPEED_JUMP: i16;
+  const FRAMES: u8;
+  const FRAME_NAME: &'static str;
+
+  fn frame_name(&self) -> &'static str {
+    Self::FRAME_NAME
+  }
+}
+
 #[derive(Copy, Clone)]
-pub struct RedHatBoyState<S> {
+pub struct RedHatBoyState<S: BaseStateStruct> {
   context: RedHatBoyContext,
   _state: S,
 }
 
-impl<S> RedHatBoyState<S> {
+impl<S: BaseStateStruct> RedHatBoyState<S> {
   pub fn context(&self) -> &RedHatBoyContext {
     &self.context
+  }
+
+  pub fn frame_name(&self) -> &'static str {
+    self._state.frame_name()
   }
 }
